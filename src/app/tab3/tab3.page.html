@@ -50,5 +50,33 @@
         </ion-row>
       </ion-grid>
     </ng-container>
+
+    <!-- Acciones rápidas sobre dispositivos críticos -->
+    <ion-card *ngIf="criticalDevices$ | async as criticalDevices">
+      <ion-card-header>
+        <ion-card-title>Acciones sobre dispositivos críticos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ng-container *ngIf="criticalDevices.length; else noCriticalDevices">
+          <ion-list>
+            <ion-item *ngFor="let d of criticalDevices | slice:0:10">
+              <ion-label>
+                <h2>{{ d.displayName || d.deviceName || d.name }}</h2>
+                <p>IP: {{ d.ipaddress || d.ip }}</p>
+              </ion-label>
+              <ion-button size="small" color="primary" (click)="ping(d)">
+                Ping
+              </ion-button>
+              <ion-button size="small" color="medium" (click)="trace(d)">
+                Trace
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+        <ng-template #noCriticalDevices>
+          <p>No hay dispositivos críticos para ejecutar acciones en este momento.</p>
+        </ng-template>
+      </ion-card-content>
+    </ion-card>
   </ng-container>
 </ion-content>

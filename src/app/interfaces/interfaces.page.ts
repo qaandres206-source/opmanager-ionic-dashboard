@@ -20,7 +20,7 @@ interface SortConfig {
   styleUrls: ['interfaces.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ScrollingModule]
+  imports: [IonicModule, CommonModule, FormsModule, ScrollingModule],
 })
 export class InterfacesPage implements OnInit {
   public interfaces$: Observable<OpManagerInterface[]> = of([]);

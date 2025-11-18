@@ -16,7 +16,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     ExploreContainerComponentModule,
     InterfacesPageRoutingModule,
     ScrollingModule,
+    InterfacesPage,
   ],
-  declarations: [InterfacesPage]
 })
 export class InterfacesPageModule {}
