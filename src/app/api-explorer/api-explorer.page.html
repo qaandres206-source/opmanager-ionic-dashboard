@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Explorador de API</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-text color="medium">
+    <p>Mostrando datos para: {{ id }}</p>
+  </ion-text>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ion-text color="danger" *ngIf="error">{{ error }}</ion-text>
+
+  <ion-card *ngIf="data && !loading">
+    <ion-card-content>
+      <pre>{{ data | json }}</pre>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,106 @@
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--ion-color-step-250, #d7d8da);
+  background-color: var(--ion-color-light, #f4f5f8);
+  font-size: 0.9em;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--ion-color-step-150, #e9eaec);
+  font-size: 0.85em;
+
+  &.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--ion-color-step-100, #f0f0f0);
+    }
+  }
+}
+
+.data-col {
+  flex: 1;
+  padding: 0 8px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    background-color: var(--ion-color-step-100, #f0f0f0);
+  }
+  ion-icon {
+    vertical-align: middle;
+    margin-left: 4px;
+    font-size: 1.1em;
+  }
+}
+
+.status-clear { color: var(--ion-color-success, #2dd36f); }
+.status-trouble { color: var(--ion-color-warning, #ffc409); }
+.status-attention { color: var(--ion-color-warning, #ffc409); }
+.status-critical { color: var(--ion-color-danger, #eb445a); }
+.status-down { color: var(--ion-color-danger, #eb445a); }
+.status-unknown { color: var(--ion-color-medium, #92949c); }
+
+cdk-virtual-scroll-viewport {
+  height: calc(100vh - 200px); /* Adjust as needed based on your layout */
+}
+
+.heatmap-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
+  background-color: var(--ion-color-light, #f4f5f8);
+}
+
+.heatmap-cell {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: scale(1.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.heatmap-clear { background-color: var(--ion-color-success, #2dd36f); }
+.heatmap-attention { background-color: var(--ion-color-warning, #ffc409); }
+.heatmap-trouble { background-color: var(--ion-color-medium, #92949c); }
+.heatmap-critical { background-color: var(--ion-color-danger, #eb445a); }
+.heatmap-down { background-color: #8b0000; } /* Dark red for "down" state */
+.heatmap-unknown { background-color: var(--ion-color-light, #d0d0d0); }
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    margin-right: 12px;
+  }
+
+  span {
+    font-size: 0.9em;
+  }
+}
+

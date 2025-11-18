@@ -1,0 +1,142 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Interfaces
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleViewMode()" title="Cambiar vista">
+        <ion-icon slot="icon-only" [name]="(viewMode$ | async) === 'table' ? 'grid-outline' : 'list-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Interfaces</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Filter Controls -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-item>
+          <ion-label>Estado (Severity)</ion-label>
+          <ion-select placeholder="Todos" (ionChange)="onFilterChanged('severity', $event.detail.value)">
+            <ion-select-option [value]="''">Todos</ion-select-option>
+            <ion-select-option *ngFor="let severity of severityOptions" [value]="severity.value">
+              {{ severity.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-item>
+          <ion-label>Tipo de Interfaz</ion-label>
+          <ion-select placeholder="Todos" (ionChange)="onFilterChanged('type', $event.detail.value)">
+            <ion-select-option [value]="''">Todos</ion-select-option>
+            <ion-select-option *ngFor="let type of interfaceTypes$ | async" [value]="type">
+              {{ type }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="errorMessage" class="ion-padding ion-text-center" style="color: var(--ion-color-danger)">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading$ | async" class="ion-text-center ion-padding-top">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- Table View -->
+  <ng-container *ngIf="(viewMode$ | async) === 'table'">
+    <ng-container *ngIf="(interfaces$ | async) as interfaces">
+      <div class="header-row" *ngIf="sort$ | async as sortConfig">
+        <div class="data-col sortable" (click)="sort('displayName')">
+          Nombre
+          <ion-icon *ngIf="sortConfig.sortByColumn === 'displayName'" [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+        </div>
+        <div class="data-col">Alias</div>
+        <div class="data-col">Descripción</div>
+        <div class="data-col sortable" (click)="sort('inSpeed')">
+          Velocidad
+          <ion-icon *ngIf="sortConfig.sortByColumn === 'inSpeed'" [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+        </div>
+        <div class="data-col sortable" (click)="sort('statusNum')">
+          Estado
+          <ion-icon *ngIf="sortConfig.sortByColumn === 'statusNum'" [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+        </div>
+      </div>
+
+      <cdk-virtual-scroll-viewport itemSize="50" class="ion-content-scroll-host">
+        <div *cdkVirtualFor="let item of interfaces" class="data-row clickable" (click)="openInterfaceDetails(item)">
+          <div class="data-col" [title]="item.ifName || item.displayName">{{ item.ifName || item.displayName }}</div>
+          <div class="data-col" [title]="item.ifAlias">{{ item.ifAlias }}</div>
+          <div class="data-col" [title]="item.ifDesc">{{ item.ifDesc }}</div>
+          <div class="data-col">{{ item.inSpeed }}</div>
+          <div class="data-col" [ngClass]="getStatusClass(item)">
+            {{ item.statusStr }}
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+
+      <div *ngIf="interfaces.length === 0 && !(loading$ | async)" class="ion-padding ion-text-center">
+        No se encontraron interfaces con los filtros seleccionados.
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <!-- Heatmap View -->
+  <ng-container *ngIf="(viewMode$ | async) === 'heatmap'">
+    <ng-container *ngIf="(interfaces$ | async) as interfaces">
+      <div class="heatmap-container">
+        <div *ngFor="let item of interfaces" class="heatmap-cell" [ngClass]="getHeatmapStatusClass(item)" [title]="(item.ifName || item.displayName) + ' - ' + item.statusStr" (click)="openInterfaceDetails(item)">
+        </div>
+      </div>
+
+      <div *ngIf="interfaces.length === 0 && !(loading$ | async)" class="ion-padding ion-text-center">
+        No se encontraron interfaces con los filtros seleccionados.
+      </div>
+
+      <!-- Legend -->
+      <ion-card class="ion-margin">
+        <ion-card-header>
+          <ion-card-title>Leyenda</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="legend-item">
+            <div class="legend-color heatmap-clear"></div>
+            <span>Clear (OK)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color heatmap-attention"></div>
+            <span>Attention</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color heatmap-trouble"></div>
+            <span>Trouble</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color heatmap-critical"></div>
+            <span>Critical</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color heatmap-down"></div>
+            <span>Down</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color heatmap-unknown"></div>
+            <span>Unknown</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ng-container>
+
+</ion-content>

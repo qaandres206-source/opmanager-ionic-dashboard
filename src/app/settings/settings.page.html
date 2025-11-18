@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>API Key de OpManager</ion-card-title>
+      <ion-card-subtitle>
+        Ingresa tu API Key para conectarte a la API de OpManager (se guarda localmente)
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">API Key</ion-label>
+        <ion-input [(ngModel)]="apiKey" type="password"></ion-input>
+      </ion-item>
+      <ion-button expand="block" color="primary" class="ion-margin-top" (click)="onSaveApiKey()">
+        <ion-icon name="save" slot="start"></ion-icon>
+        Guardar API Key
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Estado de Conexión</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" (click)="onTestConnection()">
+        <ion-icon name="cloud-outline" slot="start"></ion-icon>
+        Probar Conexión
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Configuración de Actualización</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Intervalo de actualización (segundos)</ion-label>
+        <ion-input [(ngModel)]="refreshIntervalSeconds" type="number"></ion-input>
+      </ion-item>
+      <ion-button expand="block" class="ion-margin-top" (click)="onSaveSettings()">
+        <ion-icon name="save" slot="start"></ion-icon>
+        Guardar Configuración
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Explorador de Endpoints</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item routerLink="/api/alarms-all">Alertas - Todas</ion-item>
+        <ion-item routerLink="/api/alarms-active">Alertas - Activas</ion-item>
+        <ion-item routerLink="/api/alarms-severity-1">Alertas - Severidad 1</ion-item>
+        <ion-item routerLink="/api/alarms-severity-4">Alertas - Severidad 4</ion-item>
+        <ion-item routerLink="/api/devices-all">Dispositivos - Todos</ion-item>
+        <ion-item routerLink="/api/devices-firewall">Dispositivos - Firewall (cliente 902)</ion-item>
+        <ion-item routerLink="/api/devices-server">Dispositivos - Servers</ion-item>
+        <ion-item routerLink="/api/devices-severity-7">Dispositivos - Severidad 7</ion-item>
+        <ion-item routerLink="/api/devices-severity-4">Dispositivos - Severidad 4</ion-item>
+        <ion-item routerLink="/api/devices-severity-1">Dispositivos - Severidad 1</ion-item>
+        <ion-item routerLink="/api/monitors-associated">Monitores asociados (10.47.5.5.130000000001)</ion-item>
+        <ion-item routerLink="/api/monitors-performance">Monitores de rendimiento (10.1.19.30.160000000001)</ion-item>
+        <ion-item routerLink="/api/top-devices-interface-down">Top dispositivos - Interface Down</ion-item>
+        <ion-item routerLink="/api/top-devices-device-down">Top dispositivos - Device Down</ion-item>
+        <ion-item routerLink="/api/ping-device">Ping device 10.47.5.5.130000000001</ion-item>
+        <ion-item routerLink="/api/trace-device">Trace route 10.47.5.5.130000000001</ion-item>
+        <ion-item routerLink="/api/events-all">Eventos - Todos</ion-item>
+        <ion-item routerLink="/api/events-device-down">Eventos - Device Down</ion-item>
+        <ion-item routerLink="/api/events-interface-down">Eventos - Interface Down</ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,10 @@
+/* Styles for CDK virtual scroll viewport */
+.cdk-viewport {
+	height: calc(100vh - 220px);
+	width: 100%;
+	display: block;
+}
+.alert-item {
+	padding: 4px 0;
+}
+

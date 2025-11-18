@@ -1,0 +1,85 @@
+<ion-header collapse="condense">
+  <ion-toolbar>
+    <ion-title size="large">Lista de Dispositivos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-row class="ion-margin-bottom">
+    <ion-col size="12" size-md="3">
+      <ion-item>
+        <ion-label position="stacked">Cliente</ion-label>
+        <ion-select [value]="selectedCustomer" (ionChange)="onCustomerChange($event)" [disabled]="loading">
+          <ion-select-option value="all">Todos</ion-select-option>
+          <ion-select-option *ngFor="let c of dashboard.customers$ | async" [value]="c.CustomerID">
+            {{ c.CustomerName }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="12" size-md="3">
+      <ion-item>
+        <ion-label position="stacked">Tipo de Dispositivo</ion-label>
+        <ion-select [value]="selectedType" (ionChange)="onTypeChange($event)" [disabled]="loading">
+          <ion-select-option value="all">Todos</ion-select-option>
+          <ion-select-option value="Switch">Switch</ion-select-option>
+          <ion-select-option value="Router">Router</ion-select-option>
+          <ion-select-option value="Server">Server</ion-select-option>
+          <ion-select-option value="Firewall">Firewall</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="12" size-md="3">
+      <ion-item>
+        <ion-label position="stacked">Estado</ion-label>
+        <ion-select [value]="selectedStatus" (ionChange)="onStatusChange($event)" [disabled]="loading">
+          <ion-select-option value="all">Todos</ion-select-option>
+          <ion-select-option value="clear">Clear</ion-select-option>
+          <ion-select-option value="critical">Critical</ion-select-option>
+          <ion-select-option value="warning">Warning</ion-select-option>
+          <ion-select-option value="attention">Attention</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="12" size-md="3" class="ion-align-self-end">
+      <ion-button expand="block" color="success">
+        <ion-icon name="download" slot="start"></ion-icon>
+        Exportar a Excel
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <!-- Spinner mientras se cargan los datos -->
+  <div *ngIf="loading" class="ion-text-center ion-margin">
+    <ion-spinner color="primary"></ion-spinner>
+    <p>Cargando dispositivos...</p>
+  </div>
+
+  <ion-card *ngIf="!loading">
+    <ion-card-content>
+      <ion-grid class="devices-table">
+        <ion-row class="header-row">
+          <ion-col>Nombre</ion-col>
+          <ion-col size="2">IP</ion-col>
+          <ion-col size="2">Estado</ion-col>
+          <ion-col size="2">Salud</ion-col>
+          <ion-col size="2">Tipo</ion-col>
+          <ion-col size="3">Última Actualización</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let d of pagedDevices" class="data-row">
+          <ion-col>{{ d.displayName || d.deviceName || d.name }}</ion-col>
+          <ion-col size="2">{{ d.ipaddress || d.ip }}</ion-col>
+          <ion-col size="2">{{ d.statusStr }}</ion-col>
+          <ion-col size="2">{{ d.statusStr }}</ion-col>
+          <ion-col size="2">{{ d.category || d.type }}</ion-col>
+          <ion-col size="3">{{ d.prettyTime || d.addedTime }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <div class="ion-padding pagination-controls" *ngIf="filteredDevices.length">
+    <ion-button size="small" (click)="prevDevicePage()" [disabled]="currentPage<=1">Anterior</ion-button>
+    <ion-button size="small" color="primary">Pg {{currentPage}} / {{ totalDevicePages }}</ion-button>
+    <ion-button size="small" (click)="nextDevicePage()" [disabled]="currentPage>=totalDevicePages">Siguiente</ion-button>
+  </div>
+</ion-content>

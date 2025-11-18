@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon name="grid-outline" slot="icon-only"></ion-icon>
+    </ion-buttons>
+    <ion-title>
+      OpManager MSP Dashboard
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleTheme()">
+        <ion-icon [name]="isDarkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      </ion-button>
+      <ion-button color="primary" (click)="onRefresh()">
+        <ion-icon name="refresh"></ion-icon>
+        <ion-label class="ion-padding-start">Actualizar</ion-label>
+      </ion-button>
+      <ion-chip *ngIf="connectionStatus$ | async as status" [color]="status.color">
+        <ion-icon name="ellipse" color="light"></ion-icon>
+        <ion-label>{{ status.text }}</ion-label>
+      </ion-chip>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="stats-row" *ngIf="stats$ | async as stats">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="3" *ngIf="stats">
+          <ion-card class="stat-card blue">
+            <ion-card-content>
+              <div class="stat-value">{{ stats.totalDevices }}</div>
+              <div class="stat-label">Total Dispositivos</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="3">
+          <ion-card class="stat-card orange">
+            <ion-card-content>
+              <div class="stat-value">{{ stats.activeAlerts }}</div>
+              <div class="stat-label">Alertas Activas</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="3">
+          <ion-card class="stat-card green">
+            <ion-card-content>
+              <div class="stat-value">{{ stats.healthyDevices }}</div>
+              <div class="stat-label">Dispositivos Saludables</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="3">
+          <ion-card class="stat-card red">
+            <ion-card-content>
+              <div class="stat-value">{{ stats.criticalDevices }}</div>
+              <div class="stat-label">Dispositivos Críticos</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <ion-tabs>
+    <ion-tab-bar slot="top">
+      <ion-tab-button tab="devices" href="/tabs/devices">
+        <ion-icon aria-hidden="true" name="server-outline"></ion-icon>
+        <ion-label>Dispositivos</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="alerts" href="/tabs/alerts">
+        <ion-icon aria-hidden="true" name="warning-outline"></ion-icon>
+        <ion-label>Alertas</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="health" href="/tabs/health">
+        <ion-icon aria-hidden="true" name="pulse-outline"></ion-icon>
+        <ion-label>Resumen de Salud</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="interfaces" href="/tabs/interfaces">
+        <ion-icon name="git-network-outline"></ion-icon>
+        <ion-label>Interfaces</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

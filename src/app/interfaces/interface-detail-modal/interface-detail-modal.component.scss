@@ -1,0 +1,59 @@
+.info-row {
+  margin-bottom: 12px;
+  font-size: 0.95em;
+  line-height: 1.5;
+
+  strong {
+    display: block;
+    color: var(--ion-color-step-600, #666);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+}
+
+.metric-box {
+  text-align: center;
+  padding: 16px;
+  background: var(--ion-color-step-50, #fafbfc);
+  border-radius: 8px;
+  border-left: 3px solid var(--ion-color-primary);
+}
+
+.metric-label {
+  font-size: 0.85em;
+  color: var(--ion-color-step-600, #999);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: var(--ion-color-dark, #222);
+  
+  &.text-danger {
+    color: var(--ion-color-danger, #eb445a);
+  }
+}
+
+.graph-placeholder {
+  height: 200px;
+  background: var(--ion-color-step-100, #f0f0f0);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0;
+
+  p {
+    margin: 0;
+    color: var(--ion-color-step-600, #999);
+  }
+
+  small {
+    color: var(--ion-color-step-500, #aaa);
+  }
+}

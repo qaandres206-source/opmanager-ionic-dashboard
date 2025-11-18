@@ -1,0 +1,151 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ interface?.ifName || interface?.displayName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="loading$ | async" class="ion-text-center ion-padding-top">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="(summary$ | async) as summary">
+    <!-- Header with status -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información General</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <div class="info-row">
+              <strong>Nombre:</strong> {{ interface?.ifName }}
+            </div>
+            <div class="info-row">
+              <strong>Alias:</strong> {{ interface?.ifAlias || 'N/A' }}
+            </div>
+            <div class="info-row">
+              <strong>Descripción:</strong> {{ interface?.ifDesc || 'N/A' }}
+            </div>
+            <div class="info-row">
+              <strong>Tipo:</strong> {{ interface?.type || 'N/A' }}
+            </div>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <div class="info-row">
+              <strong>Estado:</strong>
+              <ion-badge [color]="getStatusColor(interface?.statusStr || '')">
+                {{ interface?.statusStr }}
+              </ion-badge>
+            </div>
+            <div class="info-row">
+              <strong>Velocidad Entrada:</strong> {{ interface?.inSpeed || 'N/A' }}
+            </div>
+            <div class="info-row">
+              <strong>Velocidad Salida:</strong> {{ interface?.outSpeed || 'N/A' }}
+            </div>
+            <div class="info-row">
+              <strong>IP Address:</strong> {{ summary?.IntfIpaddress || 'N/A' }}
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Performance Metrics -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Métricas de Desempeño</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="12" size-sm="6" size-md="3">
+            <div class="metric-box">
+              <div class="metric-label">Utilización</div>
+              <div class="metric-value">{{ summary?.Util || '0' }}%</div>
+            </div>
+          </ion-col>
+          <ion-col size="12" size-sm="6" size-md="3">
+            <div class="metric-box">
+              <div class="metric-label">Tráfico Entrada</div>
+              <div class="metric-value">{{ summary?.inTraffic || '0' }}</div>
+            </div>
+          </ion-col>
+          <ion-col size="12" size-sm="6" size-md="3">
+            <div class="metric-box">
+              <div class="metric-label">Tráfico Salida</div>
+              <div class="metric-value">{{ summary?.outTraffic || '0' }}</div>
+            </div>
+          </ion-col>
+          <ion-col size="12" size-sm="6" size-md="3">
+            <div class="metric-box">
+              <div class="metric-label">Errores</div>
+              <div class="metric-value" [class.text-danger]="summary?.Errors && summary?.Errors !== '0'">
+                {{ summary?.Errors || '0' }}
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Graph Period Selector -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Gráficas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>Período:</ion-label>
+          <ion-select (ionChange)="onGraphPeriodChange($event.detail.value)" [value]="selectedGraphPeriod$ | async">
+            <ion-select-option *ngFor="let period of graphPeriods" [value]="period.value">
+              {{ period.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Traffic Graph -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Tráfico</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ng-container *ngIf="(graphTraffic$ | async) as graphData">
+          <div *ngIf="graphData && graphData['graphData'] && graphData['graphData'].length > 0" class="graph-placeholder">
+            <p class="ion-text-center">Gráfica de Tráfico (Rx/Tx)</p>
+            <small class="ion-text-center">Unidad: {{ graphData['suffix'] || 'bytes' }}</small>
+          </div>
+          <div *ngIf="!graphData || !graphData['graphData'] || graphData['graphData'].length === 0" class="ion-text-center ion-padding">
+            <p>No hay datos de gráfica disponibles</p>
+          </div>
+        </ng-container>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Utilization Graph -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Utilización</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ng-container *ngIf="(graphUtilization$ | async) as graphData">
+          <div *ngIf="graphData && graphData['graphData'] && graphData['graphData'].length > 0" class="graph-placeholder">
+            <p class="ion-text-center">Gráfica de Utilización</p>
+            <small class="ion-text-center">Unidad: {{ graphData['suffix'] || 'porcentaje' }}</small>
+          </div>
+          <div *ngIf="!graphData || !graphData['graphData'] || graphData['graphData'].length === 0" class="ion-text-center ion-padding">
+            <p>No hay datos de gráfica disponibles</p>
+          </div>
+        </ng-container>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+</ion-content>

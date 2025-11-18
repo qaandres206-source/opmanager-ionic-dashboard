@@ -1,0 +1,45 @@
+<ion-header collapse="condense">
+  <ion-toolbar>
+    <ion-title size="large">Alertas del Sistema</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-row class="ion-margin-bottom">
+    <!-- Filters could be added here similar to Tab1 -->
+    <ion-col size="12" size-md="3" class="ion-align-self-end">
+      <ion-button expand="block" color="success">
+        <ion-icon name="download" slot="start"></ion-icon>
+        Exportar a Excel
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+  <!-- Spinner mientras se cargan las alertas (usa localLoading$) -->
+  <div *ngIf="localLoading$ | async" class="ion-text-center ion-margin">
+    <ion-spinner color="primary"></ion-spinner>
+    <p>Cargando alertas...</p>
+  </div>
+
+  <ng-container *ngIf="!(localLoading$ | async)">
+    <div *ngIf="errorMessage" class="ion-padding">
+      <ion-text color="danger">{{ errorMessage }}</ion-text>
+    </div>
+
+    <cdk-virtual-scroll-viewport *ngIf="alerts.length; else noAlerts" itemSize="72" class="cdk-viewport">
+      <div *cdkVirtualFor="let a of alerts" class="alert-item">
+        <ion-item>
+          <ion-label>
+            <h2>{{ a.severityString || a.severity }}</h2>
+            <h3>{{ a.deviceName || a.displayName }}</h3>
+            <p>{{ a.message }}</p>
+          </ion-label>
+        </ion-item>
+      </div>
+    </cdk-virtual-scroll-viewport>
+
+    <ng-template #noAlerts>
+      <ion-text color="medium">No hay alertas para mostrar.</ion-text>
+    </ng-template>
+  </ng-container>
+</ion-content>
