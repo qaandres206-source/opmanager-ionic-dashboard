@@ -29,14 +29,11 @@ export class Tab1Page {
 
   applyFilters() {
     this.filteredDevices = this.devices.filter((d) => {
-      const customerId = this.selectedCustomer;
       const type = this.selectedType;
       const status = this.selectedStatus;
 
-      if (customerId !== 'all') {
-        const cid = String(d['CustomerID'] ?? d['customerID'] ?? d['selCustomerID'] ?? '');
-        if (cid !== customerId) return false;
-      }
+      // Nota: el filtrado por cliente se hace desde el backend usando selCustomerID,
+      // así que aquí solo filtramos por tipo y estado para no descartar resultados válidos.
       if (type !== 'all') {
         const cat = String(d['category'] ?? '').toLowerCase();
         if (cat !== type.toLowerCase()) return false;
@@ -52,11 +49,14 @@ export class Tab1Page {
   }
 
   onCustomerChange(ev: CustomEvent) {
-    this.selectedCustomer = ev.detail.value;
+    // Normalizamos siempre a string para que los filtros y las comparaciones funcionen bien
+    this.selectedCustomer = String(ev.detail.value ?? 'all');
+
     // Actualizar filtro global de cliente y refrescar datos
     const cid = this.selectedCustomer === 'all' ? '-1' : this.selectedCustomer;
     this.dashboard.selectedCustomer$.next(cid);
     this.loading = true;
+
     this.dashboard.refreshAll().subscribe({
       next: () => (this.loading = false),
       error: () => (this.loading = false),
