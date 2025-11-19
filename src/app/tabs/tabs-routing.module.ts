@@ -33,14 +33,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/devices',
+        redirectTo: '/tabs/settings',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/devices',
+    redirectTo: '/tabs/settings',
     pathMatch: 'full'
   }
 ];
