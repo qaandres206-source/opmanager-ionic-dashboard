@@ -1,0 +1,49 @@
+.sre-audit-content {
+  --background: var(--ion-color-light);
+}
+
+.log-card {
+  height: 100%;
+}
+
+.log-console {
+  background: #111;
+  color: #f5f5f5;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.log-line {
+  display: flex;
+  align-items: baseline;
+  padding: 2px 0;
+}
+
+.log-time {
+  color: #888;
+  margin-right: 8px;
+}
+
+.log-level {
+  margin-right: 8px;
+}
+
+.log-message {
+  white-space: pre-wrap;
+}
+
+.log-info .log-level {
+  color: #4caf50;
+}
+
+.log-warn .log-level {
+  color: #ffc107;
+}
+
+.log-error .log-level {
+  color: #f44336;
+}

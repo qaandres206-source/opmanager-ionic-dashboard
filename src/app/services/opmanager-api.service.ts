@@ -414,6 +414,38 @@ export class OpmanagerApiService {
       );
   }
 
+  /** SRE / discovery endpoints (based on Google Apps Script) **/
+  updateInterfaces(deviceName: string, interfaceIDs: string[], regionId: string = '-1', selCustomerID?: string | number): Observable<boolean> {
+    if (!this.apiKey) {
+      return of(false);
+    }
+    const idsStr = JSON.stringify(interfaceIDs);
+    // We build params manually here because the discovery endpoint expects specific query params
+    const params: Record<string, any> = {
+      deviceName,
+      interfaceIDs: idsStr,
+      update: 'true',
+      selCustomerID: selCustomerID ?? '-1',
+      regionID: regionId,
+    };
+    const httpParams = this.buildParams(params);
+    const url = `${this.baseUrl}/json/discovery/updateInterfaces`;
+    const headers = this.buildHeaders();
+    this.debugLogRequest('GET', url, httpParams, headers);
+    return this.http
+      .get<any>(url, {
+        params: httpParams,
+        headers,
+      })
+      .pipe(
+        map((res) => {
+          // Treat HTTP 200 with any body as success; you can refine based on real API response
+          return !!res;
+        }),
+        catchError(() => of(false))
+      );
+  }
+
   getInterfaceSummary(interfaceName: string): Observable<InterfaceSummary> {
     if (!this.apiKey) {
       return of({});
