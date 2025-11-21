@@ -1,10 +1,24 @@
-/* Styles for CDK virtual scroll viewport */
-.cdk-viewport {
-	height: calc(100vh - 220px);
-	width: 100%;
-	display: block;
-}
-.alert-item {
-	padding: 4px 0;
+.pagination-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
+.devices-table {
+  width: 100%;
+}
+
+.header-row {
+  font-weight: 600;
+  border-bottom: 1px solid var(--ion-color-medium-shade);
+}
+
+.data-row:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.data-row ion-col {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

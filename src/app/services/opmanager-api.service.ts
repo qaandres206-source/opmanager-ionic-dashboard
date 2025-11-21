@@ -19,12 +19,24 @@ export interface OpManagerDevice {
 }
 
 export interface OpManagerAlert {
+  /** Numeric or string severity as returned by OpManager */
   severity?: number | string;
+  /** Human readable severity string (Critical, Warning, etc.) */
   severityString?: string;
+  /** Device/host name associated to the alarm */
   deviceName?: string;
+  /** Display name resolved for the device (preferred over deviceName) */
   displayName?: string;
+  /** Optional IP address fields that may come from the API */
+  ipaddress?: string;
+  ipAddress?: string;
+  /** Optional device category (Server, Switch, Firewall, etc.) */
+  category?: string;
+  /** Human readable alarm message */
   message?: string;
+  /** Status for the alarm (active/cleared, etc.) */
   status?: string;
+  /** Generic index signature for any extra fields (timestamps, etc.) */
   [key: string]: any;
 }
 
@@ -85,8 +97,16 @@ export interface HealthSummary {
 }
 
 export interface ListAlarmsParams {
+  /** Alarm type as expected by OpManager, e.g. ActiveAlarms */
   alertType?: string;
+  /** Severity filter, either numeric or string depending on API */
   severity?: number | string;
+  /** Device name / display name filter */
+  deviceName?: string;
+  /** Device category filter (Server, Switch, Firewall, etc.) */
+  category?: string;
+  /** Period filter as understood by OpManager API (for example: 1, 24, 168…) */
+  period?: string | number;
 }
 
 export interface ListEventsParams {
