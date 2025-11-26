@@ -8,9 +8,17 @@
   <ion-row class="ion-margin-bottom">
     <!-- Filtros de tabla -->
     <ion-col size="12" size-md="3">
+      <ion-label position="stacked" class="ion-padding-start">Dispositivo</ion-label>
       <ion-item>
-        <ion-label position="stacked">Dispositivo</ion-label>
-        <ion-select [value]="selectedDevice" (ionChange)="onDeviceChange($event)" [disabled]="localLoading$ | async">
+        <ion-input 
+          [value]="deviceInputValue" 
+          (ionInput)="onDeviceInputChange($event)" 
+          placeholder="Escribir o pegar..."
+          [disabled]="localLoading$ | async">
+        </ion-input>
+      </ion-item>
+      <ion-item class="ion-margin-top">
+        <ion-select [value]="selectedDevice" (ionChange)="onDeviceChange($event)" [disabled]="localLoading$ | async" interface="popover">
           <ion-select-option value="all">Todos</ion-select-option>
           <ion-select-option *ngFor="let d of deviceOptions" [value]="d">{{ d }}</ion-select-option>
         </ion-select>
@@ -18,19 +26,35 @@
     </ion-col>
 
     <ion-col size="12" size-md="3">
+      <ion-label position="stacked" class="ion-padding-start">Estado / Severidad</ion-label>
       <ion-item>
-        <ion-label position="stacked">Estado / Severidad</ion-label>
-        <ion-select [value]="selectedSeverity" (ionChange)="onSeverityChange($event)" [disabled]="localLoading$ | async">
+        <ion-input 
+          [value]="severityInputValue" 
+          (ionInput)="onSeverityInputChange($event)" 
+          placeholder="Escribir o pegar..."
+          [disabled]="localLoading$ | async">
+        </ion-input>
+      </ion-item>
+      <ion-item class="ion-margin-top">
+        <ion-select [value]="selectedSeverity" (ionChange)="onSeverityChange($event)" [disabled]="localLoading$ | async" interface="popover">
           <ion-select-option value="all">Todos</ion-select-option>
           <ion-select-option *ngFor="let s of severityOptions" [value]="s">{{ s }}</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-col>
 
-    <ion-col size="12" size-md="3">
+    <ion-col size="12" size-md="2">
+      <ion-label position="stacked" class="ion-padding-start">Categoría</ion-label>
       <ion-item>
-        <ion-label position="stacked">Categoría</ion-label>
-        <ion-select [value]="selectedCategory" (ionChange)="onCategoryChange($event)" [disabled]="localLoading$ | async">
+        <ion-input 
+          [value]="categoryInputValue" 
+          (ionInput)="onCategoryInputChange($event)" 
+          placeholder="Escribir o pegar..."
+          [disabled]="localLoading$ | async">
+        </ion-input>
+      </ion-item>
+      <ion-item class="ion-margin-top">
+        <ion-select [value]="selectedCategory" (ionChange)="onCategoryChange($event)" [disabled]="localLoading$ | async" interface="popover">
           <ion-select-option value="all">Todas</ion-select-option>
           <ion-select-option *ngFor="let c of categoryOptions" [value]="c">{{ c }}</ion-select-option>
         </ion-select>
@@ -38,9 +62,9 @@
     </ion-col>
 
     <ion-col size="12" size-md="2">
-      <ion-item>
-        <ion-label position="stacked">Período</ion-label>
-        <ion-select [value]="selectedPeriod" (ionChange)="onPeriodChange($event)" [disabled]="localLoading$ | async">
+      <ion-label position="stacked" class="ion-padding-start">Período</ion-label>
+      <ion-item class="ion-margin-top">
+        <ion-select [value]="selectedPeriod" (ionChange)="onPeriodChange($event)" [disabled]="localLoading$ | async" interface="popover">
           <ion-select-option value="all">Todos</ion-select-option>
           <ion-select-option value="1">Última hora</ion-select-option>
           <ion-select-option value="24">Últimas 24h</ion-select-option>
@@ -49,7 +73,7 @@
       </ion-item>
     </ion-col>
 
-    <ion-col size="12" size-md="1" class="ion-align-self-end">
+    <ion-col size="12" size-md="2" class="ion-align-self-end">
       <ion-button expand="block" color="success" (click)="exportToCsv()">
         <ion-icon name="download" slot="start"></ion-icon>
         Exportar

@@ -20,6 +20,10 @@ export class Tab1Page {
   selectedType: string = 'all';
   selectedStatus: string = 'all';
 
+  // Input values for copy-paste functionality
+  typeInputValue: string = '';
+  statusInputValue: string = '';
+
   constructor(public dashboard: DashboardStateService, private api: OpmanagerApiService) {
     this.dashboard.devices$.subscribe((devices) => {
       this.devices = devices;
@@ -65,12 +69,77 @@ export class Tab1Page {
 
   onTypeChange(ev: CustomEvent) {
     this.selectedType = ev.detail.value;
+    this.typeInputValue = this.selectedType === 'all' ? '' : this.selectedType;
+    this.applyFilters();
+  }
+
+  onTypeInputChange(ev: any) {
+    const value = ev.detail.value?.trim() || '';
+    this.typeInputValue = value;
+    if (value === '') {
+      this.selectedType = 'all';
+    } else {
+      this.selectedType = value;
+    }
     this.applyFilters();
   }
 
   onStatusChange(ev: CustomEvent) {
     this.selectedStatus = ev.detail.value;
+    this.statusInputValue = this.selectedStatus === 'all' ? '' : this.selectedStatus;
     this.applyFilters();
+  }
+
+  onStatusInputChange(ev: any) {
+    const value = ev.detail.value?.trim() || '';
+    this.statusInputValue = value;
+    if (value === '') {
+      this.selectedStatus = 'all';
+    } else {
+      this.selectedStatus = value;
+    }
+    this.applyFilters();
+  }
+
+  exportToCsv() {
+    if (!this.filteredDevices.length) {
+      return;
+    }
+
+    const escape = (value: any): string => {
+      const str = value == null ? '' : String(value);
+      if (/[,;"\n]/.test(str)) {
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+      return str;
+    };
+
+    const rows: string[] = [];
+
+    // Header row
+    rows.push('Nombre;IP;Estado;Salud;Tipo;Última Actualización');
+
+    this.filteredDevices.forEach((d) => {
+      rows.push([
+        d.displayName || d.deviceName || d['name'] || '',
+        d.ipaddress || d['ip'] || '',
+        d.statusStr || '',
+        d.statusStr || '',
+        d.category || d.type || '',
+        d.prettyTime || d.addedTime || '',
+      ].map(escape).join(';'));
+    });
+
+    const csvContent = rows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'opmanager_devices.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 
   // Pagination helpers

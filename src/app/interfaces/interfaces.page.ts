@@ -33,6 +33,10 @@ export class InterfacesPage implements OnInit {
   public sort$ = new BehaviorSubject<SortConfig>({ sortByColumn: 'statusNum', sortByType: 'desc' });
   public viewMode$ = new BehaviorSubject<'table' | 'heatmap'>('table');
 
+  // Input values for copy-paste functionality
+  severityInputValue: string = '';
+  typeInputValue: string = '';
+
   // Hardcoded based on API documentation
   public readonly severityOptions = [
     { value: '1', name: 'Critical' },
@@ -47,7 +51,7 @@ export class InterfacesPage implements OnInit {
     private opmanagerApi: OpmanagerApiService,
     private dashboard: DashboardStateService,
     private modalCtrl: ModalController
-  ) {}
+  ) { }
 
   ngOnInit() {
     const trigger$ = combineLatest([
@@ -100,16 +104,42 @@ export class InterfacesPage implements OnInit {
       ...currentFilters,
       [filterName]: value
     });
+    // Update input values when select changes
+    if (filterName === 'severity') {
+      this.severityInputValue = value || '';
+    } else if (filterName === 'type') {
+      this.typeInputValue = value || '';
+    }
+  }
+
+  public onSeverityInputChange(ev: any) {
+    const value = ev.detail.value?.trim() || '';
+    this.severityInputValue = value;
+    const currentFilters = this.filters$.value;
+    this.filters$.next({
+      ...currentFilters,
+      severity: value
+    });
+  }
+
+  public onTypeInputChange(ev: any) {
+    const value = ev.detail.value?.trim() || '';
+    this.typeInputValue = value;
+    const currentFilters = this.filters$.value;
+    this.filters$.next({
+      ...currentFilters,
+      type: value
+    });
   }
 
   public sort(column: string) {
     const currentSort = this.sort$.value;
     let nextSortType: 'asc' | 'desc' = 'asc';
-    
+
     if (currentSort.sortByColumn === column && currentSort.sortByType === 'asc') {
       nextSortType = 'desc';
     }
-    
+
     this.sort$.next({
       sortByColumn: column,
       sortByType: nextSortType,
@@ -149,5 +179,50 @@ export class InterfacesPage implements OnInit {
       }
     });
     await modal.present();
+  }
+
+  public exportToCsv() {
+    // Get current interfaces from the observable
+    this.interfaces$.pipe(
+      map(interfaces => {
+        if (!interfaces.length) {
+          return;
+        }
+
+        const escape = (value: any): string => {
+          const str = value == null ? '' : String(value);
+          if (/[,;"\n]/.test(str)) {
+            return '"' + str.replace(/"/g, '""') + '"';
+          }
+          return str;
+        };
+
+        const rows: string[] = [];
+
+        // Header row
+        rows.push('Nombre;Alias;Descripción;Velocidad;Estado');
+
+        interfaces.forEach((i) => {
+          rows.push([
+            i['ifName'] || i['displayName'] || '',
+            i['ifAlias'] || '',
+            i['ifDesc'] || '',
+            i['inSpeed'] || '',
+            i['statusStr'] || '',
+          ].map(escape).join(';'));
+        });
+
+        const csvContent = rows.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'opmanager_interfaces.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      })
+    ).subscribe();
   }
 }

@@ -1,0 +1,218 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e7]:
+      - img [ref=e9]:
+        - img [ref=e11]
+      - generic [ref=e18]:
+        - generic: OpManager MSP Dashboard
+      - generic [ref=e19]:
+        - button [ref=e21] [cursor=pointer]:
+          - generic [ref=e22]:
+            - generic:
+              - img:
+                - generic:
+                  - img
+        - button "Actualizar" [ref=e24] [cursor=pointer]:
+          - generic [ref=e25]:
+            - generic:
+              - img:
+                - generic:
+                  - img
+              - generic [ref=e26]: Actualizar
+        - generic [ref=e27] [cursor=pointer]:
+          - generic:
+            - img [ref=e28]:
+              - img [ref=e30]
+            - generic [ref=e32]: Sin API Key
+  - main [ref=e33]:
+    - generic [ref=e36]:
+      - tablist [ref=e37]:
+        - generic:
+          - tab "Dispositivos" [ref=e39] [cursor=pointer]:
+            - generic [ref=e40]:
+              - generic:
+                - img [ref=e41]:
+                  - img [ref=e43]
+                - generic [ref=e47]: Dispositivos
+          - tab "Alarmas" [ref=e49] [cursor=pointer]:
+            - generic [ref=e50]:
+              - generic:
+                - img [ref=e51]:
+                  - img [ref=e53]
+                - generic [ref=e57]: Alarmas
+          - tab "Resumen de Salud" [ref=e59] [cursor=pointer]:
+            - generic [ref=e60]:
+              - generic:
+                - img [ref=e61]:
+                  - img [ref=e63]
+                - generic [ref=e66]: Resumen de Salud
+          - tab "Interfaces" [ref=e68] [cursor=pointer]:
+            - generic [ref=e69]:
+              - generic:
+                - img [ref=e70]:
+                  - img [ref=e72]
+                - generic [ref=e77]: Interfaces
+          - tab "SRE Audit" [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]:
+              - generic:
+                - img [ref=e81]:
+                  - img [ref=e83]
+                - generic [ref=e87]: SRE Audit
+      - generic [ref=e90]:
+        - banner [ref=e91]:
+          - generic [ref=e96]:
+            - generic: Configuración
+        - main [ref=e97]:
+          - generic [ref=e99]:
+            - generic:
+              - generic [ref=e100]:
+                - generic:
+                  - generic [ref=e101]:
+                    - generic:
+                      - heading "API Key de OpManager" [level=2] [ref=e102]:
+                        - generic: API Key de OpManager
+                      - heading "Ingresa tu API Key para conectarte a la API de OpManager (se guarda localmente)" [level=3] [ref=e103]:
+                        - generic: Ingresa tu API Key para conectarte a la API de OpManager (se guarda localmente)
+                  - generic [ref=e104]:
+                    - generic [ref=e108]:
+                      - generic:
+                        - generic [ref=e109]: API Key
+                        - textbox [ref=e113]
+                    - button "Guardar API Key" [ref=e115] [cursor=pointer]:
+                      - generic [ref=e116]:
+                        - generic:
+                          - img:
+                            - generic:
+                              - img
+                        - generic: Guardar API Key
+              - generic [ref=e117]:
+                - generic:
+                  - heading "Estado de Conexión" [level=2] [ref=e119]:
+                    - generic: Estado de Conexión
+                  - button "Probar Conexión" [ref=e122] [cursor=pointer]:
+                    - generic [ref=e123]:
+                      - generic:
+                        - img:
+                          - generic:
+                            - img
+                      - generic: Probar Conexión
+              - generic [ref=e124]:
+                - generic:
+                  - heading "Configuración de Actualización" [level=2] [ref=e126]:
+                    - generic: Configuración de Actualización
+                  - generic [ref=e127]:
+                    - generic [ref=e131]:
+                      - generic:
+                        - generic [ref=e132]: Intervalo de actualización (segundos)
+                        - spinbutton [ref=e136]: "30"
+                    - button "Guardar Configuración" [ref=e138] [cursor=pointer]:
+                      - generic [ref=e139]:
+                        - generic:
+                          - img:
+                            - generic:
+                              - img
+                        - generic: Guardar Configuración
+              - generic [ref=e140]:
+                - generic:
+                  - heading "Explorador de Endpoints" [level=2] [ref=e142]:
+                    - generic: Explorador de Endpoints
+                  - list [ref=e144]:
+                    - listitem [ref=e145]:
+                      - link "Alertas - Todas" [ref=e146] [cursor=pointer]:
+                        - /url: /api/alarms-all
+                        - generic [ref=e148]:
+                          - generic: Alertas - Todas
+                    - listitem [ref=e149]:
+                      - link "Alertas - Activas" [ref=e150] [cursor=pointer]:
+                        - /url: /api/alarms-active
+                        - generic [ref=e152]:
+                          - generic: Alertas - Activas
+                    - listitem [ref=e153]:
+                      - link "Alertas - Severidad 1" [ref=e154] [cursor=pointer]:
+                        - /url: /api/alarms-severity-1
+                        - generic [ref=e156]:
+                          - generic: Alertas - Severidad 1
+                    - listitem [ref=e157]:
+                      - link "Alertas - Severidad 4" [ref=e158] [cursor=pointer]:
+                        - /url: /api/alarms-severity-4
+                        - generic [ref=e160]:
+                          - generic: Alertas - Severidad 4
+                    - listitem [ref=e161]:
+                      - link "Dispositivos - Todos" [ref=e162] [cursor=pointer]:
+                        - /url: /api/devices-all
+                        - generic [ref=e164]:
+                          - generic: Dispositivos - Todos
+                    - listitem [ref=e165]:
+                      - link "Dispositivos - Firewall (cliente 902)" [ref=e166] [cursor=pointer]:
+                        - /url: /api/devices-firewall
+                        - generic [ref=e168]:
+                          - generic: Dispositivos - Firewall (cliente 902)
+                    - listitem [ref=e169]:
+                      - link "Dispositivos - Servers" [ref=e170] [cursor=pointer]:
+                        - /url: /api/devices-server
+                        - generic [ref=e172]:
+                          - generic: Dispositivos - Servers
+                    - listitem [ref=e173]:
+                      - link "Dispositivos - Severidad 7" [ref=e174] [cursor=pointer]:
+                        - /url: /api/devices-severity-7
+                        - generic [ref=e176]:
+                          - generic: Dispositivos - Severidad 7
+                    - listitem [ref=e177]:
+                      - link "Dispositivos - Severidad 4" [ref=e178] [cursor=pointer]:
+                        - /url: /api/devices-severity-4
+                        - generic [ref=e180]:
+                          - generic: Dispositivos - Severidad 4
+                    - listitem [ref=e181]:
+                      - link "Dispositivos - Severidad 1" [ref=e182] [cursor=pointer]:
+                        - /url: /api/devices-severity-1
+                        - generic [ref=e184]:
+                          - generic: Dispositivos - Severidad 1
+                    - listitem [ref=e185]:
+                      - link "Monitores asociados (10.47.5.5.130000000001)" [ref=e186] [cursor=pointer]:
+                        - /url: /api/monitors-associated
+                        - generic [ref=e188]:
+                          - generic: Monitores asociados (10.47.5.5.130000000001)
+                    - listitem [ref=e189]:
+                      - link "Monitores de rendimiento (10.1.19.30.160000000001)" [ref=e190] [cursor=pointer]:
+                        - /url: /api/monitors-performance
+                        - generic [ref=e192]:
+                          - generic: Monitores de rendimiento (10.1.19.30.160000000001)
+                    - listitem [ref=e193]:
+                      - link "Top dispositivos - Interface Down" [ref=e194] [cursor=pointer]:
+                        - /url: /api/top-devices-interface-down
+                        - generic [ref=e196]:
+                          - generic: Top dispositivos - Interface Down
+                    - listitem [ref=e197]:
+                      - link "Top dispositivos - Device Down" [ref=e198] [cursor=pointer]:
+                        - /url: /api/top-devices-device-down
+                        - generic [ref=e200]:
+                          - generic: Top dispositivos - Device Down
+                    - listitem [ref=e201]:
+                      - link "Ping device 10.47.5.5.130000000001" [ref=e202] [cursor=pointer]:
+                        - /url: /api/ping-device
+                        - generic [ref=e204]:
+                          - generic: Ping device 10.47.5.5.130000000001
+                    - listitem [ref=e205]:
+                      - link "Trace route 10.47.5.5.130000000001" [ref=e206] [cursor=pointer]:
+                        - /url: /api/trace-device
+                        - generic [ref=e208]:
+                          - generic: Trace route 10.47.5.5.130000000001
+                    - listitem [ref=e209]:
+                      - link "Eventos - Todos" [ref=e210] [cursor=pointer]:
+                        - /url: /api/events-all
+                        - generic [ref=e212]:
+                          - generic: Eventos - Todos
+                    - listitem [ref=e213]:
+                      - link "Eventos - Device Down" [ref=e214] [cursor=pointer]:
+                        - /url: /api/events-device-down
+                        - generic [ref=e216]:
+                          - generic: Eventos - Device Down
+                    - listitem [ref=e217]:
+                      - link "Eventos - Interface Down" [ref=e218] [cursor=pointer]:
+                        - /url: /api/events-interface-down
+                        - generic [ref=e220]:
+                          - generic: Eventos - Interface Down
+```

@@ -7,9 +7,10 @@
 <ion-content class="ion-padding">
   <ion-row class="ion-margin-bottom">
     <ion-col size="12" size-md="3">
+      <ion-label position="stacked" class="ion-padding-start">Cliente</ion-label>
       <ion-item>
-        <ion-label position="stacked">Cliente</ion-label>
-        <ion-select [value]="selectedCustomer" (ionChange)="onCustomerChange($event)" [disabled]="loading">
+        <ion-select [value]="selectedCustomer" (ionChange)="onCustomerChange($event)" [disabled]="loading"
+          interface="popover">
           <ion-select-option value="all">Todos</ion-select-option>
           <ion-select-option *ngFor="let c of dashboard.customers$ | async" [value]="c.CustomerID">
             {{ c.CustomerName }}
@@ -18,9 +19,14 @@
       </ion-item>
     </ion-col>
     <ion-col size="12" size-md="3">
+      <ion-label position="stacked" class="ion-padding-start">Tipo de Dispositivo</ion-label>
       <ion-item>
-        <ion-label position="stacked">Tipo de Dispositivo</ion-label>
-        <ion-select [value]="selectedType" (ionChange)="onTypeChange($event)" [disabled]="loading">
+        <ion-input [value]="typeInputValue" (ionInput)="onTypeInputChange($event)" placeholder="Escribir o pegar..."
+          [disabled]="loading">
+        </ion-input>
+      </ion-item>
+      <ion-item class="ion-margin-top">
+        <ion-select [value]="selectedType" (ionChange)="onTypeChange($event)" [disabled]="loading" interface="popover">
           <ion-select-option value="all">Todos</ion-select-option>
           <ion-select-option value="Switch">Switch</ion-select-option>
           <ion-select-option value="Router">Router</ion-select-option>
@@ -30,9 +36,15 @@
       </ion-item>
     </ion-col>
     <ion-col size="12" size-md="3">
+      <ion-label position="stacked" class="ion-padding-start">Estado</ion-label>
       <ion-item>
-        <ion-label position="stacked">Estado</ion-label>
-        <ion-select [value]="selectedStatus" (ionChange)="onStatusChange($event)" [disabled]="loading">
+        <ion-input [value]="statusInputValue" (ionInput)="onStatusInputChange($event)" placeholder="Escribir o pegar..."
+          [disabled]="loading">
+        </ion-input>
+      </ion-item>
+      <ion-item class="ion-margin-top">
+        <ion-select [value]="selectedStatus" (ionChange)="onStatusChange($event)" [disabled]="loading"
+          interface="popover">
           <ion-select-option value="all">Todos</ion-select-option>
           <ion-select-option value="clear">Clear</ion-select-option>
           <ion-select-option value="critical">Critical</ion-select-option>
@@ -42,7 +54,7 @@
       </ion-item>
     </ion-col>
     <ion-col size="12" size-md="3" class="ion-align-self-end">
-      <ion-button expand="block" color="success">
+      <ion-button expand="block" color="success" (click)="exportToCsv()">
         <ion-icon name="download" slot="start"></ion-icon>
         Exportar a Excel
       </ion-button>
@@ -80,6 +92,7 @@
   <div class="ion-padding pagination-controls" *ngIf="filteredDevices.length">
     <ion-button size="small" (click)="prevDevicePage()" [disabled]="currentPage<=1">Anterior</ion-button>
     <ion-button size="small" color="primary">Pg {{currentPage}} / {{ totalDevicePages }}</ion-button>
-    <ion-button size="small" (click)="nextDevicePage()" [disabled]="currentPage>=totalDevicePages">Siguiente</ion-button>
+    <ion-button size="small" (click)="nextDevicePage()"
+      [disabled]="currentPage>=totalDevicePages">Siguiente</ion-button>
   </div>
 </ion-content>

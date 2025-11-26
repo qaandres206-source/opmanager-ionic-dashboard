@@ -119,10 +119,18 @@ export class OpmanagerApiService {
   private baseUrl = (environment as any).opmanagerApiUrl ?? 'https://itview.intwo.cloud/api';
 
   constructor(private http: HttpClient) {
+    // Log environment info for debugging
+    console.log('[OpManagerApiService] Initializing...', {
+      production: environment.production,
+      configuredUrl: (environment as any).opmanagerApiUrl,
+      finalBaseUrl: this.baseUrl
+    });
+
     // During development, use the dev proxy at /api to avoid CORS issues when running ionic serve
     try {
       if (typeof window !== 'undefined' && window.location && window.location.hostname.includes('localhost')) {
         this.baseUrl = '/api';
+        console.log('[OpManagerApiService] Localhost detected, switching to /api proxy');
       }
     } catch (e) {
       // noop

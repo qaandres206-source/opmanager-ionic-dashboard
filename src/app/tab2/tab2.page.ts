@@ -28,6 +28,11 @@ export class Tab2Page implements OnDestroy {
   selectedCategory: string = 'all';
   selectedPeriod: string = 'all';
 
+  // Input values for copy-paste functionality
+  deviceInputValue: string = '';
+  severityInputValue: string = '';
+  categoryInputValue: string = '';
+
   // Derived filter options
   deviceOptions: string[] = [];
   severityOptions: string[] = [];
@@ -104,16 +109,52 @@ export class Tab2Page implements OnDestroy {
 
   onDeviceChange(ev: CustomEvent) {
     this.selectedDevice = ev.detail.value ?? 'all';
+    this.deviceInputValue = this.selectedDevice === 'all' ? '' : this.selectedDevice;
+    this.reloadFromBackend();
+  }
+
+  onDeviceInputChange(ev: any) {
+    const value = ev.detail.value?.trim() || '';
+    this.deviceInputValue = value;
+    if (value === '') {
+      this.selectedDevice = 'all';
+    } else {
+      this.selectedDevice = value;
+    }
     this.reloadFromBackend();
   }
 
   onSeverityChange(ev: CustomEvent) {
     this.selectedSeverity = ev.detail.value ?? 'all';
+    this.severityInputValue = this.selectedSeverity === 'all' ? '' : this.selectedSeverity;
+    this.reloadFromBackend();
+  }
+
+  onSeverityInputChange(ev: any) {
+    const value = ev.detail.value?.trim() || '';
+    this.severityInputValue = value;
+    if (value === '') {
+      this.selectedSeverity = 'all';
+    } else {
+      this.selectedSeverity = value;
+    }
     this.reloadFromBackend();
   }
 
   onCategoryChange(ev: CustomEvent) {
     this.selectedCategory = ev.detail.value ?? 'all';
+    this.categoryInputValue = this.selectedCategory === 'all' ? '' : this.selectedCategory;
+    this.reloadFromBackend();
+  }
+
+  onCategoryInputChange(ev: any) {
+    const value = ev.detail.value?.trim() || '';
+    this.categoryInputValue = value;
+    if (value === '') {
+      this.selectedCategory = 'all';
+    } else {
+      this.selectedCategory = value;
+    }
     this.reloadFromBackend();
   }
 
@@ -160,7 +201,7 @@ export class Tab2Page implements OnDestroy {
     this.categoryOptions = Array.from(categories).sort();
   }
 
-  /** Apply client side filters (status/severityString/category) over current alarms */
+  /** Apply client side filters (status/severityString/category/period) over current alarms */
   private applyClientFilters() {
     this.filteredAlerts = this.alerts.filter((a) => {
       if (this.selectedDevice !== 'all') {
@@ -184,6 +225,22 @@ export class Tab2Page implements OnDestroy {
         }
       }
 
+      // Period filter: filter by timestamp
+      if (this.selectedPeriod !== 'all') {
+        const hoursAgo = parseInt(this.selectedPeriod, 10);
+        if (!isNaN(hoursAgo)) {
+          const cutoffTime = Date.now() - (hoursAgo * 60 * 60 * 1000);
+          // Try to get timestamp from various possible fields
+          const timestamp = a['timestamp'] || a['time'] || a['createdTime'] || a['modifiedTime'];
+          if (timestamp) {
+            const alertTime = typeof timestamp === 'number' ? timestamp : new Date(timestamp).getTime();
+            if (alertTime < cutoffTime) {
+              return false;
+            }
+          }
+        }
+      }
+
       return true;
     });
 
@@ -199,7 +256,7 @@ export class Tab2Page implements OnDestroy {
   private detectCorsError(err: any) {
     try {
       if (err && err.status === 0) return true;
-    } catch (_) {}
+    } catch (_) { }
     return false;
   }
 

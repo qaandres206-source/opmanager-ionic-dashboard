@@ -5,7 +5,8 @@
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="toggleViewMode()" title="Cambiar vista">
-        <ion-icon slot="icon-only" [name]="(viewMode$ | async) === 'table' ? 'grid-outline' : 'list-outline'"></ion-icon>
+        <ion-icon slot="icon-only"
+          [name]="(viewMode$ | async) === 'table' ? 'grid-outline' : 'list-outline'"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -21,10 +22,16 @@
   <!-- Filter Controls -->
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-md="6">
+      <ion-col size="12" size-md="4">
+        <ion-label position="stacked" class="ion-padding-start">Estado (Severity)</ion-label>
         <ion-item>
-          <ion-label>Estado (Severity)</ion-label>
-          <ion-select placeholder="Todos" (ionChange)="onFilterChanged('severity', $event.detail.value)">
+          <ion-input [value]="severityInputValue" (ionInput)="onSeverityInputChange($event)"
+            placeholder="Escribir o pegar..." [disabled]="loading$ | async">
+          </ion-input>
+        </ion-item>
+        <ion-item class="ion-margin-top">
+          <ion-select placeholder="Todos" (ionChange)="onFilterChanged('severity', $event.detail.value)"
+            interface="popover">
             <ion-select-option [value]="''">Todos</ion-select-option>
             <ion-select-option *ngFor="let severity of severityOptions" [value]="severity.value">
               {{ severity.name }}
@@ -32,16 +39,28 @@
           </ion-select>
         </ion-item>
       </ion-col>
-      <ion-col size="12" size-md="6">
+      <ion-col size="12" size-md="4">
+        <ion-label position="stacked" class="ion-padding-start">Tipo de Interfaz</ion-label>
         <ion-item>
-          <ion-label>Tipo de Interfaz</ion-label>
-          <ion-select placeholder="Todos" (ionChange)="onFilterChanged('type', $event.detail.value)">
+          <ion-input [value]="typeInputValue" (ionInput)="onTypeInputChange($event)" placeholder="Escribir o pegar..."
+            [disabled]="loading$ | async">
+          </ion-input>
+        </ion-item>
+        <ion-item class="ion-margin-top">
+          <ion-select placeholder="Todos" (ionChange)="onFilterChanged('type', $event.detail.value)"
+            interface="popover">
             <ion-select-option [value]="''">Todos</ion-select-option>
             <ion-select-option *ngFor="let type of interfaceTypes$ | async" [value]="type">
               {{ type }}
             </ion-select-option>
           </ion-select>
         </ion-item>
+      </ion-col>
+      <ion-col size="12" size-md="4" class="ion-align-self-end">
+        <ion-button expand="block" color="success" (click)="exportToCsv()">
+          <ion-icon name="download" slot="start"></ion-icon>
+          Exportar
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -60,17 +79,20 @@
       <div class="header-row" *ngIf="sort$ | async as sortConfig">
         <div class="data-col sortable" (click)="sort('displayName')">
           Nombre
-          <ion-icon *ngIf="sortConfig.sortByColumn === 'displayName'" [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+          <ion-icon *ngIf="sortConfig.sortByColumn === 'displayName'"
+            [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
         </div>
         <div class="data-col">Alias</div>
         <div class="data-col">Descripción</div>
         <div class="data-col sortable" (click)="sort('inSpeed')">
           Velocidad
-          <ion-icon *ngIf="sortConfig.sortByColumn === 'inSpeed'" [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+          <ion-icon *ngIf="sortConfig.sortByColumn === 'inSpeed'"
+            [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
         </div>
         <div class="data-col sortable" (click)="sort('statusNum')">
           Estado
-          <ion-icon *ngIf="sortConfig.sortByColumn === 'statusNum'" [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
+          <ion-icon *ngIf="sortConfig.sortByColumn === 'statusNum'"
+            [name]="sortConfig.sortByType === 'asc' ? 'arrow-up-outline' : 'arrow-down-outline'"></ion-icon>
         </div>
       </div>
 
@@ -96,7 +118,8 @@
   <ng-container *ngIf="(viewMode$ | async) === 'heatmap'">
     <ng-container *ngIf="(interfaces$ | async) as interfaces">
       <div class="heatmap-container">
-        <div *ngFor="let item of interfaces" class="heatmap-cell" [ngClass]="getHeatmapStatusClass(item)" [title]="(item.ifName || item.displayName) + ' - ' + item.statusStr" (click)="openInterfaceDetails(item)">
+        <div *ngFor="let item of interfaces" class="heatmap-cell" [ngClass]="getHeatmapStatusClass(item)"
+          [title]="(item.ifName || item.displayName) + ' - ' + item.statusStr" (click)="openInterfaceDetails(item)">
         </div>
       </div>
 
