@@ -3,95 +3,17 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-
-export interface OpManagerDevice {
-  displayName?: string;
-  deviceName?: string;
-  name?: string;
-  ipaddress?: string;
-  ip?: string;
-  statusStr?: string;
-  category?: string;
-  type?: string;
-  prettyTime?: string;
-  addedTime?: string;
-  [key: string]: any;
-}
-
-export interface OpManagerAlert {
-  severity?: number | string;
-  severityString?: string;
-  deviceName?: string;
-  displayName?: string;
-  message?: string;
-  status?: string;
-  [key: string]: any;
-}
-
-export interface OpManagerInterface {
-  displayName?: string;
-  ifName?: string;
-  ifAlias?: string;
-  ifDesc?: string;
-  ifSpeed?: string;
-  status?: string;
-  statusStr?: string;
-  inSpeed?: string;
-  outSpeed?: string;
-  type?: string;
-  interfaceName?: string;
-  [key: string]: any;
-}
-
-export interface InterfaceSummary {
-  NFA_ID?: string;
-  IntfIpaddress?: string;
-  displayName?: string;
-  Util?: number | string;
-  availability?: Record<string, number>;
-  inTraffic?: string;
-  outTraffic?: string;
-  operState?: string;
-  adminState?: string;
-  Errors?: string;
-  Discards?: string;
-  rxUtil?: string;
-  txUtil?: string;
-  [key: string]: any;
-}
-
-export interface InterfaceGraphData {
-  interfaceDetails?: Record<string, any>;
-  displayName?: string;
-  consolidatedValues?: Record<string, any>;
-  graphData?: Array<{ seriesname: string; data: Array<any> }>;
-  xyTitles?: string[];
-  [key: string]: any;
-}
-
-export interface DashboardData {
-  total_devices: number;
-  active_alerts: number;
-  devices_by_status: Record<string, number>;
-  recent_alerts: OpManagerAlert[];
-  devices: OpManagerDevice[];
-}
-
-export interface HealthSummary {
-  healthy: number;
-  warning: number;
-  critical: number;
-  unknown: number;
-}
-
-export interface ListAlarmsParams {
-  alertType?: string;
-  severity?: number | string;
-}
-
-export interface ListEventsParams {
-  eventType?: string;
-}
+import {
+  OpManagerDevice,
+  OpManagerAlert,
+  OpManagerInterface,
+  InterfaceSummary,
+  InterfaceGraphData,
+  DashboardData,
+  HealthSummary,
+  ListAlarmsParams,
+  ListEventsParams
+} from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class OpmanagerApiService {
@@ -99,10 +21,18 @@ export class OpmanagerApiService {
   private baseUrl = (environment as any).opmanagerApiUrl ?? 'https://itview.intwo.cloud/api';
 
   constructor(private http: HttpClient) {
+    // Log environment info for debugging
+    console.log('[OpManagerApiService] Initializing...', {
+      production: environment.production,
+      configuredUrl: (environment as any).opmanagerApiUrl,
+      finalBaseUrl: this.baseUrl
+    });
+
     // During development, use the dev proxy at /api to avoid CORS issues when running ionic serve
     try {
       if (typeof window !== 'undefined' && window.location && window.location.hostname.includes('localhost')) {
         this.baseUrl = '/api';
+        console.log('[OpManagerApiService] Localhost detected, switching to /api proxy');
       }
     } catch (e) {
       // noop
@@ -411,6 +341,38 @@ export class OpmanagerApiService {
           }
           return [];
         })
+      );
+  }
+
+  /** SRE / discovery endpoints (based on Google Apps Script) **/
+  updateInterfaces(deviceName: string, interfaceIDs: string[], regionId: string = '-1', selCustomerID?: string | number): Observable<boolean> {
+    if (!this.apiKey) {
+      return of(false);
+    }
+    const idsStr = JSON.stringify(interfaceIDs);
+    // We build params manually here because the discovery endpoint expects specific query params
+    const params: Record<string, any> = {
+      deviceName,
+      interfaceIDs: idsStr,
+      update: 'true',
+      selCustomerID: selCustomerID ?? '-1',
+      regionID: regionId,
+    };
+    const httpParams = this.buildParams(params);
+    const url = `${this.baseUrl}/json/discovery/updateInterfaces`;
+    const headers = this.buildHeaders();
+    this.debugLogRequest('GET', url, httpParams, headers);
+    return this.http
+      .get<any>(url, {
+        params: httpParams,
+        headers,
+      })
+      .pipe(
+        map((res) => {
+          // Treat HTTP 200 with any body as success; you can refine based on real API response
+          return !!res;
+        }),
+        catchError(() => of(false))
       );
   }
 

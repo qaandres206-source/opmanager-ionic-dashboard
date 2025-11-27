@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, of, switchMap, tap, Observable } from 'rxjs';
-import {
-  DashboardData,
-  HealthSummary,
-  OpManagerAlert,
-  OpManagerDevice,
-  OpmanagerApiService,
-} from './opmanager-api.service';
+import { DashboardData, HealthSummary, OpManagerAlert, OpManagerDevice } from '../core/models';
+import { OpmanagerApiService } from './opmanager-api.service';
 
 export interface ConnectionStatus {
   text: string;

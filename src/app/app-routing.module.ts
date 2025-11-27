@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('./api-explorer/api-explorer.module').then(m => m.ApiExplorerPageModule),
   },
   {
+    path: 'sre-audit',
+    loadChildren: () => import('./sre-audit/sre-audit.module').then(m => m.SreAuditPageModule),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

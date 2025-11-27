@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  opmanagerApiUrl: 'https://itview.intwo.cloud/api',
+  opmanagerApiUrl: '/api', // Proxied through Cloud Functions
 };

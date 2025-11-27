@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>OpManager MSP - SRE</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding sre-audit-content">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Modos de ejecución</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button expand="block" color="primary" (click)="runQuick()" [disabled]="running$ | async">
+              ⚡ Modo RÁPIDO (solo reporte)
+            </ion-button>
+            <ion-button expand="block" color="medium" (click)="runFull()" [disabled]="running$ | async"
+              class="ion-margin-top">
+              🔄 Proceso completo (con actualización)
+            </ion-button>
+
+            <div class="ion-margin-top ion-text-center" *ngIf="running$ | async">
+              <ion-spinner name="crescent"></ion-spinner>
+              <p>Procesando… revisa el monitor de logs.</p>
+            </div>
+
+            <div class="ion-margin-top ion-text-center" *ngIf="(running$ | async) === false && (mode$ | async)">
+              <ion-text color="success">Proceso finalizado</ion-text>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="summary$ | async as summary">
+          <ion-card-header>
+            <ion-card-title>Resumen Ejecutivo</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label>Total dispositivos</ion-label>
+                <ion-note slot="end">{{ summary.devices.length }}</ion-note>
+              </ion-item>
+              <ion-item>
+                <ion-label>Total interfaces</ion-label>
+                <ion-note slot="end">{{ summary.totalInterfaces }}</ion-note>
+              </ion-item>
+              <ion-item>
+                <ion-label>Sin monitoreo</ion-label>
+                <ion-note slot="end" color="warning">{{ summary.totalUnmonitored }}</ion-note>
+              </ion-item>
+              <ion-item>
+                <ion-label>Interfaces DOWN</ion-label>
+                <ion-note slot="end" color="danger">{{ summary.totalDown }}</ion-note>
+              </ion-item>
+            </ion-list>
+
+            <ion-button expand="block" color="success" class="ion-margin-top" (click)="exportToCsv()">
+              <ion-icon name="download" slot="start"></ion-icon>
+              Exportar a Excel (CSV)
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="error$ | async as error">
+          <ion-card-header>
+            <ion-card-title>Error</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-text color="danger">{{ error }}</ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="8">
+        <ion-card class="log-card">
+          <ion-card-header>
+            <ion-card-title>Monitor de Logs</ion-card-title>
+            <ion-card-subtitle>Pasos del proceso en tiempo real</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="log-console">
+              <div *ngFor="let log of (logs$ | async); trackBy: trackLog" class="log-line" [ngClass]="{
+                  'log-info': log.level === 'info',
+                  'log-warn': log.level === 'warn',
+                  'log-error': log.level === 'error'
+                }">
+                <span class="log-time">{{ log.timestamp | date: 'HH:mm:ss' }}</span>
+                <span class="log-level">[{{ log.level.toUpperCase() }}]</span>
+                <span class="log-message">{{ log.message }}</span>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

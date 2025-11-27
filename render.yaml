@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: opmanager-dashboard
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build:prod
+    startCommand: npm run server
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.1
+      - key: API_BASE_URL
+        value: https://itview.intwo.cloud/api
+      - key: NODE_ENV
+        value: production

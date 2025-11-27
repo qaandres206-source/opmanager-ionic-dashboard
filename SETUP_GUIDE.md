@@ -104,6 +104,44 @@ src/app/
 └── ...
 ```
 
+## Testing con Playwright
+
+### Instalación de Playwright
+
+```bash
+# Instalar Playwright
+npm install -D @playwright/test
+
+# Instalar browsers
+npx playwright install
+```
+
+### Ejecutar Tests E2E
+
+```bash
+# Ejecutar todos los tests
+npm run test:e2e
+
+# Con UI interactiva (recomendado)
+npm run test:e2e:ui
+
+# En modo headed (ver el browser)
+npm run test:e2e:headed
+
+# Ver reporte
+npm run test:e2e:report
+```
+
+### Configurar API Key para Tests
+
+Para tests con datos reales:
+
+```bash
+export TEST_API_KEY="your-api-key-here"
+```
+
+Para más detalles, consulta [TESTING.md](./TESTING.md)
+
 ## Próximas Mejoras
 
 - [ ] Añadir más filtros en Tab1 (búsqueda, orden)

@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, startWith, switchMap, catchError } from 'rxjs/operators';
-import { OpmanagerApiService, OpManagerInterface, InterfaceSummary, InterfaceGraphData } from '../../services/opmanager-api.service';
+import { OpmanagerApiService } from '../../services/opmanager-api.service';
+import { OpManagerInterface, InterfaceSummary, InterfaceGraphData } from '../../core/models';
 
 @Component({
   selector: 'app-interface-detail-modal',
@@ -33,7 +34,7 @@ export class InterfaceDetailModalComponent implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private opmanagerApi: OpmanagerApiService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (!this.interface) {
