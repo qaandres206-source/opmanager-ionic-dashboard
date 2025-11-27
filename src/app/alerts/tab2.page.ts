@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { DashboardStateService } from '../services/dashboard-state.service';
-import { OpManagerAlert, OpmanagerApiService } from '../services/opmanager-api.service';
+import { OpmanagerApiService } from '../services/opmanager-api.service';
+import { OpManagerAlert } from '../core/models';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 
 @Component({
@@ -43,7 +44,8 @@ export class Tab2Page implements OnDestroy {
   errorMessage: string | null = null;
 
   constructor(public dashboard: DashboardStateService, private api: OpmanagerApiService) {
-    // Reload alarms whenever selected customer or any filter that goes to backend changes.
+    // Reload alarms whenever selected customer changes.
+    // We now fetch ALL alarms for the customer and filter client-side.
     const s1 = this.dashboard.selectedCustomer$
       .pipe(
         switchMap((sel) => {
@@ -56,20 +58,7 @@ export class Tab2Page implements OnDestroy {
             params['selCustomerID'] = sel;
           }
 
-          // Backend filters: severity, category, period, deviceName (optional)
-          if (this.selectedSeverity !== 'all') {
-            params['severity'] = this.selectedSeverity;
-          }
-          if (this.selectedCategory !== 'all') {
-            params['category'] = this.selectedCategory;
-          }
-          if (this.selectedPeriod !== 'all') {
-            params['period'] = this.selectedPeriod;
-          }
-          if (this.selectedDevice !== 'all') {
-            params['deviceName'] = this.selectedDevice;
-          }
-
+          // Fetch ALL alarms for this customer (no backend filtering)
           return this.api.getAlarms(params);
         })
       )
@@ -110,7 +99,7 @@ export class Tab2Page implements OnDestroy {
   onDeviceChange(ev: CustomEvent) {
     this.selectedDevice = ev.detail.value ?? 'all';
     this.deviceInputValue = this.selectedDevice === 'all' ? '' : this.selectedDevice;
-    this.reloadFromBackend();
+    this.applyClientFilters();
   }
 
   onDeviceInputChange(ev: any) {
@@ -121,13 +110,13 @@ export class Tab2Page implements OnDestroy {
     } else {
       this.selectedDevice = value;
     }
-    this.reloadFromBackend();
+    this.applyClientFilters();
   }
 
   onSeverityChange(ev: CustomEvent) {
     this.selectedSeverity = ev.detail.value ?? 'all';
     this.severityInputValue = this.selectedSeverity === 'all' ? '' : this.selectedSeverity;
-    this.reloadFromBackend();
+    this.applyClientFilters();
   }
 
   onSeverityInputChange(ev: any) {
@@ -138,13 +127,13 @@ export class Tab2Page implements OnDestroy {
     } else {
       this.selectedSeverity = value;
     }
-    this.reloadFromBackend();
+    this.applyClientFilters();
   }
 
   onCategoryChange(ev: CustomEvent) {
     this.selectedCategory = ev.detail.value ?? 'all';
     this.categoryInputValue = this.selectedCategory === 'all' ? '' : this.selectedCategory;
-    this.reloadFromBackend();
+    this.applyClientFilters();
   }
 
   onCategoryInputChange(ev: any) {
@@ -155,12 +144,12 @@ export class Tab2Page implements OnDestroy {
     } else {
       this.selectedCategory = value;
     }
-    this.reloadFromBackend();
+    this.applyClientFilters();
   }
 
   onPeriodChange(ev: CustomEvent) {
     this.selectedPeriod = ev.detail.value ?? 'all';
-    this.reloadFromBackend();
+    this.applyClientFilters();
   }
 
   nextPage() {
@@ -175,7 +164,7 @@ export class Tab2Page implements OnDestroy {
     }
   }
 
-  /** Build select options based on the alarms returned by the backend */
+  /** Build select options based on ALL alarms returned by the backend */
   private buildFilterOptions() {
     const devices = new Set<string>();
     const severities = new Set<string>();
@@ -204,23 +193,33 @@ export class Tab2Page implements OnDestroy {
   /** Apply client side filters (status/severityString/category/period) over current alarms */
   private applyClientFilters() {
     this.filteredAlerts = this.alerts.filter((a) => {
+      // Device Filter
       if (this.selectedDevice !== 'all') {
-        const dName = (a.displayName || a.deviceName || '').trim();
-        if (dName !== this.selectedDevice) {
+        const dName = (a.displayName || a.deviceName || '').trim().toLowerCase();
+        const filterValue = this.selectedDevice.toLowerCase();
+
+        // Partial match (contains)
+        if (!dName.includes(filterValue)) {
           return false;
         }
       }
 
+      // Severity Filter
       if (this.selectedSeverity !== 'all') {
-        const sev = (a.severityString || a.severity || '').toString().trim();
-        if (sev !== this.selectedSeverity) {
+        const sev = (a.severityString || a.severity || '').toString().trim().toLowerCase();
+        const filterValue = this.selectedSeverity.toLowerCase();
+
+        if (!sev.includes(filterValue)) {
           return false;
         }
       }
 
+      // Category Filter
       if (this.selectedCategory !== 'all') {
-        const cat = (a.category || '').toString().trim();
-        if (cat !== this.selectedCategory) {
+        const cat = (a.category || '').toString().trim().toLowerCase();
+        const filterValue = this.selectedCategory.toLowerCase();
+
+        if (!cat.includes(filterValue)) {
           return false;
         }
       }

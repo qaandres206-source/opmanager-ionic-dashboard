@@ -16,7 +16,8 @@
             <ion-button expand="block" color="primary" (click)="runQuick()" [disabled]="running$ | async">
               ⚡ Modo RÁPIDO (solo reporte)
             </ion-button>
-            <ion-button expand="block" color="medium" (click)="runFull()" [disabled]="running$ | async" class="ion-margin-top">
+            <ion-button expand="block" color="medium" (click)="runFull()" [disabled]="running$ | async"
+              class="ion-margin-top">
               🔄 Proceso completo (con actualización)
             </ion-button>
 
@@ -25,7 +26,7 @@
               <p>Procesando… revisa el monitor de logs.</p>
             </div>
 
-            <div class="ion-margin-top ion-text-center" *ngIf="!(running$ | async) && (mode$ | async)">
+            <div class="ion-margin-top ion-text-center" *ngIf="(running$ | async) === false && (mode$ | async)">
               <ion-text color="success">Proceso finalizado</ion-text>
             </div>
           </ion-card-content>
@@ -80,15 +81,11 @@
           </ion-card-header>
           <ion-card-content>
             <div class="log-console">
-              <div
-                *ngFor="let log of (logs$ | async); trackBy: trackLog"
-                class="log-line"
-                [ngClass]="{
+              <div *ngFor="let log of (logs$ | async); trackBy: trackLog" class="log-line" [ngClass]="{
                   'log-info': log.level === 'info',
                   'log-warn': log.level === 'warn',
                   'log-error': log.level === 'error'
-                }"
-              >
+                }">
                 <span class="log-time">{{ log.timestamp | date: 'HH:mm:ss' }}</span>
                 <span class="log-level">[{{ log.level.toUpperCase() }}]</span>
                 <span class="log-message">{{ log.message }}</span>

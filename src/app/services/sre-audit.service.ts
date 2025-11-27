@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap, tap, map, catchError } from 'rxjs';
-import { OpmanagerApiService, OpManagerDevice, OpManagerInterface } from './opmanager-api.service';
+import { OpmanagerApiService } from './opmanager-api.service';
+import { OpManagerDevice, OpManagerInterface } from '../core/models';
 
 export type SreAuditMode = 'quick' | 'full';
 
@@ -51,7 +52,7 @@ export class SreAuditService {
   readonly error$ = new BehaviorSubject<string | null>(null);
   readonly summary$ = new BehaviorSubject<SreAuditResultSummary | null>(null);
 
-  constructor(private api: OpmanagerApiService) {}
+  constructor(private api: OpmanagerApiService) { }
 
   clear() {
     this.logs$.next([]);

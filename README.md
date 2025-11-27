@@ -1,11 +1,11 @@
 # OpManager MSP Dashboard
 
-[![Firebase](https://img.shields.io/badge/Firebase-Hosting-orange)](https://firebase.google.com/)
+[![Render](https://img.shields.io/badge/Render-Deployed-46E3B7)](https://render.com/)
 [![Ionic](https://img.shields.io/badge/Ionic-8.0-blue)](https://ionicframework.com/)
 [![Angular](https://img.shields.io/badge/Angular-20.0-red)](https://angular.io/)
 [![Playwright](https://img.shields.io/badge/Playwright-E2E-green)](https://playwright.dev/)
 
-Dashboard web moderno para monitoreo y gestión de dispositivos OpManager MSP, construido con Ionic/Angular y desplegado en Firebase Hosting.
+Dashboard web moderno para monitoreo y gestión de dispositivos OpManager MSP, construido con Ionic/Angular y desplegado en Render.
 
 ## 🚀 Características
 
@@ -14,15 +14,15 @@ Dashboard web moderno para monitoreo y gestión de dispositivos OpManager MSP, c
 - **Monitoreo de Alertas**: Virtual scroll para manejar miles de alertas eficientemente
 - **Resumen de Salud**: Vista consolidada del estado de la infraestructura
 - **Responsive Design**: Optimizado para desktop y móvil
-- **API Proxy**: Cloud Functions para evitar CORS y cachear respuestas
+- **API Proxy**: Servidor Express para evitar CORS y manejar requests
 - **Testing E2E**: Suite completa de tests con Playwright
 
 ## 📋 Requisitos Previos
 
-- Node.js v22+ (recomendado usar [nvm](https://github.com/nvm-sh/nvm))
+- Node.js v20.18.1+ (recomendado usar [nvm](https://github.com/nvm-sh/nvm))
 - npm o yarn
 - API Key válida de OpManager MSP
-- Firebase CLI (para deployment)
+- Cuenta en Render (para deployment)
 
 ## 🛠️ Instalación
 
@@ -92,23 +92,20 @@ Para más detalles sobre testing, consulta [TESTING.md](./TESTING.md)
 
 ## 🚢 Deployment
 
-### Firebase Hosting
+### Render
 
 ```bash
 # Build de producción
-npm run build
+npm run build:prod
 
-# Deploy completo (hosting + functions)
-firebase deploy
+# Probar servidor localmente
+npm run server
 
-# Solo hosting
-firebase deploy --only hosting
-
-# Solo functions
-firebase deploy --only functions
+# Deploy a Render (automático con git push)
+git push origin main
 ```
 
-Para guía detallada de deployment, consulta [DEPLOYMENT.md](./DEPLOYMENT.md)
+Para guía detallada de deployment, consulta [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md)
 
 ## 📁 Estructura del Proyecto
 
@@ -118,9 +115,8 @@ opmanager-ionic-dashboard/
 │   ├── fixtures/                 # Test data y fixtures
 │   ├── pages/                    # Page Object Models
 │   └── tests/                    # Test specs
-├── functions/                    # Firebase Cloud Functions
-│   └── src/
-│       └── index.ts              # API Proxy con caché
+├── server/                       # Express server
+│   └── index.js                  # API Proxy y servidor estático
 ├── src/
 │   ├── app/
 │   │   ├── services/             # Servicios Angular
@@ -131,7 +127,7 @@ opmanager-ionic-dashboard/
 │   │   ├── tab3/                 # Resumen de Salud
 │   │   └── settings/             # Configuración
 │   └── environments/             # Configuración de entornos
-├── firebase.json                 # Configuración Firebase
+├── render.yaml                   # Configuración Render
 ├── playwright.config.ts          # Configuración Playwright
 └── proxy.conf.json              # Proxy de desarrollo
 ```
@@ -165,7 +161,7 @@ El archivo `proxy.conf.json` redirige las llamadas `/api` a `https://itview.intw
 
 - [SETUP_GUIDE.md](./SETUP_GUIDE.md) - Guía detallada de configuración
 - [TESTING.md](./TESTING.md) - Guía de testing
-- [DEPLOYMENT.md](./DEPLOYMENT.md) - Guía de deployment
+- [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) - Guía de deployment en Render
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Guía de contribución
 
 ## 🏗️ Arquitectura
@@ -176,10 +172,10 @@ El archivo `proxy.conf.json` redirige las llamadas `/api` a `https://itview.intw
 - **RxJS**: Programación reactiva
 - **CDK Virtual Scroll**: Renderizado eficiente de listas grandes
 
-### Backend (Firebase)
-- **Cloud Functions**: API Proxy con caché en memoria
-- **Hosting**: Servicio de archivos estáticos
-- **Node.js 20**: Runtime para functions
+### Backend (Express/Render)
+- **Express**: Servidor web y API proxy
+- **Render**: Plataforma de hosting y deployment
+- **Node.js 20**: Runtime del servidor
 
 ### API Integration
 - Integración con OpManager MSP REST API
@@ -218,5 +214,5 @@ Este proyecto es privado y propietario.
 
 - [Ionic Framework](https://ionicframework.com/)
 - [Angular](https://angular.io/)
-- [Firebase](https://firebase.google.com/)
+- [Render](https://render.com/)
 - [Playwright](https://playwright.dev/)

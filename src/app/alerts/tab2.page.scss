@@ -1,0 +1,53 @@
+.pagination-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.table-container {
+  overflow-x: auto;
+  padding: 0;
+}
+
+.devices-table {
+  min-width: 600px; /* Ensure table doesn't squash too much */
+  width: 100%;
+}
+
+.header-row {
+  font-weight: 600;
+  border-bottom: 1px solid var(--ion-color-medium-shade);
+  background-color: var(--ion-color-light);
+}
+
+.data-row {
+  border-bottom: 1px solid var(--ion-color-light-shade);
+}
+
+.data-row:nth-child(even) {
+  background-color: rgba(var(--ion-color-medium-rgb), 0.05);
+}
+
+.data-row ion-col {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.sub-text {
+  font-size: 0.85em;
+  color: var(--ion-color-medium);
+}
+
+.message-col {
+  /* Allow message to wrap on mobile if it was stacked, but here we kept it in row with min-width */
+  /* If we want it to wrap: */
+  /* white-space: normal; */
+}

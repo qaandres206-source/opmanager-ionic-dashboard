@@ -3,115 +3,17 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-
-export interface OpManagerDevice {
-  displayName?: string;
-  deviceName?: string;
-  name?: string;
-  ipaddress?: string;
-  ip?: string;
-  statusStr?: string;
-  category?: string;
-  type?: string;
-  prettyTime?: string;
-  addedTime?: string;
-  [key: string]: any;
-}
-
-export interface OpManagerAlert {
-  /** Numeric or string severity as returned by OpManager */
-  severity?: number | string;
-  /** Human readable severity string (Critical, Warning, etc.) */
-  severityString?: string;
-  /** Device/host name associated to the alarm */
-  deviceName?: string;
-  /** Display name resolved for the device (preferred over deviceName) */
-  displayName?: string;
-  /** Optional IP address fields that may come from the API */
-  ipaddress?: string;
-  ipAddress?: string;
-  /** Optional device category (Server, Switch, Firewall, etc.) */
-  category?: string;
-  /** Human readable alarm message */
-  message?: string;
-  /** Status for the alarm (active/cleared, etc.) */
-  status?: string;
-  /** Generic index signature for any extra fields (timestamps, etc.) */
-  [key: string]: any;
-}
-
-export interface OpManagerInterface {
-  displayName?: string;
-  ifName?: string;
-  ifAlias?: string;
-  ifDesc?: string;
-  ifSpeed?: string;
-  status?: string;
-  statusStr?: string;
-  inSpeed?: string;
-  outSpeed?: string;
-  type?: string;
-  interfaceName?: string;
-  [key: string]: any;
-}
-
-export interface InterfaceSummary {
-  NFA_ID?: string;
-  IntfIpaddress?: string;
-  displayName?: string;
-  Util?: number | string;
-  availability?: Record<string, number>;
-  inTraffic?: string;
-  outTraffic?: string;
-  operState?: string;
-  adminState?: string;
-  Errors?: string;
-  Discards?: string;
-  rxUtil?: string;
-  txUtil?: string;
-  [key: string]: any;
-}
-
-export interface InterfaceGraphData {
-  interfaceDetails?: Record<string, any>;
-  displayName?: string;
-  consolidatedValues?: Record<string, any>;
-  graphData?: Array<{ seriesname: string; data: Array<any> }>;
-  xyTitles?: string[];
-  [key: string]: any;
-}
-
-export interface DashboardData {
-  total_devices: number;
-  active_alerts: number;
-  devices_by_status: Record<string, number>;
-  recent_alerts: OpManagerAlert[];
-  devices: OpManagerDevice[];
-}
-
-export interface HealthSummary {
-  healthy: number;
-  warning: number;
-  critical: number;
-  unknown: number;
-}
-
-export interface ListAlarmsParams {
-  /** Alarm type as expected by OpManager, e.g. ActiveAlarms */
-  alertType?: string;
-  /** Severity filter, either numeric or string depending on API */
-  severity?: number | string;
-  /** Device name / display name filter */
-  deviceName?: string;
-  /** Device category filter (Server, Switch, Firewall, etc.) */
-  category?: string;
-  /** Period filter as understood by OpManager API (for example: 1, 24, 168…) */
-  period?: string | number;
-}
-
-export interface ListEventsParams {
-  eventType?: string;
-}
+import {
+  OpManagerDevice,
+  OpManagerAlert,
+  OpManagerInterface,
+  InterfaceSummary,
+  InterfaceGraphData,
+  DashboardData,
+  HealthSummary,
+  ListAlarmsParams,
+  ListEventsParams
+} from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class OpmanagerApiService {

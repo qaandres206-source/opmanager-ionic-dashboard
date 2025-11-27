@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { DashboardStateService } from '../services/dashboard-state.service';
-import { HealthSummary, OpManagerDevice, OpmanagerApiService } from '../services/opmanager-api.service';
+import { OpmanagerApiService } from '../services/opmanager-api.service';
+import { HealthSummary, OpManagerDevice } from '../core/models';
 
 @Component({
   selector: 'app-health',

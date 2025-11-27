@@ -5,7 +5,8 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BehaviorSubject, Observable, of, combineLatest } from 'rxjs';
 import { catchError, switchMap, tap, map, startWith } from 'rxjs/operators';
-import { OpmanagerApiService, OpManagerInterface } from '../services/opmanager-api.service';
+import { OpmanagerApiService } from '../services/opmanager-api.service';
+import { OpManagerInterface } from '../core/models';
 import { DashboardStateService } from '../services/dashboard-state.service';
 import { InterfaceDetailModalComponent } from './interface-detail-modal/interface-detail-modal.component';
 
@@ -53,31 +54,28 @@ export class InterfacesPage implements OnInit {
     private modalCtrl: ModalController
   ) { }
 
+  // We need a subject to hold the full list to derive filters from it
+  private allInterfaces$ = new BehaviorSubject<OpManagerInterface[]>([]);
+
   ngOnInit() {
-    const trigger$ = combineLatest([
+    // 1. Fetch ALL interfaces whenever customer or sort changes
+    const fetchTrigger$ = combineLatest([
       this.dashboard.selectedCustomer$.pipe(startWith(null)),
-      this.filters$,
       this.sort$
     ]);
 
-    this.interfaces$ = trigger$.pipe(
+    fetchTrigger$.pipe(
       tap(() => {
         this.loading$.next(true);
         this.errorMessage = null;
       }),
-      switchMap(([customer, filters, sort]) => {
+      switchMap(([customer, sort]) => {
         const params: Record<string, any> = {
           selCustomerID: customer ? (customer as any).value : '-1',
           sortByColumn: sort.sortByColumn,
           sortByType: sort.sortByType,
         };
-        if (filters.severity) {
-          params['severity'] = filters.severity;
-        }
-        if (filters.type) {
-          params['type'] = filters.type;
-        }
-
+        // No filter params sent to backend!
         return this.opmanagerApi.listInterfaces(params).pipe(
           catchError(err => {
             console.error('Error fetching interfaces:', err);
@@ -85,12 +83,38 @@ export class InterfacesPage implements OnInit {
             return of([]);
           })
         );
-      }),
-      tap(() => this.loading$.next(false))
+      })
+    ).subscribe((interfaces) => {
+      this.allInterfaces$.next(interfaces);
+      this.loading$.next(false);
+    });
+
+    // 2. Derive filtered interfaces from allInterfaces + filters
+    this.interfaces$ = combineLatest([
+      this.allInterfaces$,
+      this.filters$
+    ]).pipe(
+      map(([interfaces, filters]) => {
+        return interfaces.filter(iface => {
+          // Severity Filter
+          if (filters.severity && filters.severity !== 'all') {
+            const sev = String(iface['severity'] || '').toLowerCase();
+            const filterValue = filters.severity.toLowerCase();
+            if (!sev.includes(filterValue)) return false;
+          }
+          // Type Filter
+          if (filters.type && filters.type !== 'all') {
+            const t = String(iface['type'] || '').toLowerCase();
+            const filterValue = filters.type.toLowerCase();
+            if (!t.includes(filterValue)) return false;
+          }
+          return true;
+        });
+      })
     );
 
-    // Derive interface types from the main data stream for the filter
-    this.interfaceTypes$ = this.interfaces$.pipe(
+    // 3. Derive interface types from the FULL list
+    this.interfaceTypes$ = this.allInterfaces$.pipe(
       map(interfaces => {
         const types = new Set(interfaces.map(i => i['type']).filter(Boolean) as string[]);
         return Array.from(types).sort();
@@ -106,9 +130,9 @@ export class InterfacesPage implements OnInit {
     });
     // Update input values when select changes
     if (filterName === 'severity') {
-      this.severityInputValue = value || '';
+      this.severityInputValue = value === 'all' ? '' : value;
     } else if (filterName === 'type') {
-      this.typeInputValue = value || '';
+      this.typeInputValue = value === 'all' ? '' : value;
     }
   }
 
@@ -118,7 +142,7 @@ export class InterfacesPage implements OnInit {
     const currentFilters = this.filters$.value;
     this.filters$.next({
       ...currentFilters,
-      severity: value
+      severity: value === '' ? 'all' : value
     });
   }
 
@@ -128,7 +152,7 @@ export class InterfacesPage implements OnInit {
     const currentFilters = this.filters$.value;
     this.filters$.next({
       ...currentFilters,
-      type: value
+      type: value === '' ? 'all' : value
     });
   }
 

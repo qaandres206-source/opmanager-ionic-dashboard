@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DashboardStateService } from '../services/dashboard-state.service';
-import { OpmanagerApiService, OpManagerDevice } from '../services/opmanager-api.service';
+import { OpmanagerApiService } from '../services/opmanager-api.service';
+import { OpManagerDevice } from '../core/models';
 
 @Component({
   selector: 'app-devices',

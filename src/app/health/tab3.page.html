@@ -11,7 +11,7 @@
     <p>Cargando resumen de salud...</p>
   </div>
 
-  <ng-container *ngIf="!(loading$ | async)">
+  <ng-container *ngIf="(loading$ | async) === false">
     <ng-container *ngIf="healthSummary$ | async as health">
       <ion-grid>
         <ion-row>
