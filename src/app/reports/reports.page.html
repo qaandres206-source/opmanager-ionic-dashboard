@@ -1,0 +1,236 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Reportes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Report Configuration -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Configuración del Reporte</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Report Name -->
+      <ion-item>
+        <ion-label position="stacked">Nombre del Reporte</ion-label>
+        <ion-input [(ngModel)]="reportName" placeholder="Ej: Reporte Mensual Cliente X"></ion-input>
+      </ion-item>
+
+      <!-- Report Type -->
+      <ion-item>
+        <ion-label position="stacked">Tipo de Reporte</ion-label>
+        <ion-select [(ngModel)]="selectedReportType" interface="popover">
+          <ion-select-option *ngFor="let type of reportTypes" [value]="type.value">
+            {{ type.label }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Report Type Description -->
+      <ion-note class="ion-padding-start ion-padding-end">
+        {{ currentReportTypeDescription }}
+      </ion-note>
+
+      <!-- Customer Filter -->
+      <ion-item>
+        <ion-label position="stacked">Clientes (opcional)</ion-label>
+        <ion-select [(ngModel)]="selectedCustomers" [multiple]="true" placeholder="Todos los clientes">
+          <ion-select-option *ngFor="let customer of (customers$ | async)"
+            [value]="customer['customerId'] || customer['id']">
+            {{ customer['customerName'] || customer['name'] }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Date Range -->
+      <ion-item>
+        <ion-label position="stacked">Período</ion-label>
+        <ion-select [(ngModel)]="selectedDatePreset" interface="popover">
+          <ion-select-option *ngFor="let preset of datePresets" [value]="preset.value">
+            {{ preset.label }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Custom Date Range -->
+      <div *ngIf="isCustomDateRange" class="custom-dates">
+        <ion-item>
+          <ion-label position="stacked">Fecha Inicio</ion-label>
+          <ion-input type="date" [(ngModel)]="customStartDate"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Fecha Fin</ion-label>
+          <ion-input type="date" [(ngModel)]="customEndDate"></ion-input>
+        </ion-item>
+      </div>
+
+      <!-- Group By -->
+      <ion-item>
+        <ion-label position="stacked">Agrupar Por</ion-label>
+        <ion-select [(ngModel)]="groupBy" interface="popover">
+          <ion-select-option value="customer">Cliente</ion-select-option>
+          <ion-select-option value="device">Dispositivo</ion-select-option>
+          <ion-select-option value="category">Categoría</ion-select-option>
+          <ion-select-option value="none">Sin Agrupar</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Actions -->
+      <div class="ion-margin-top">
+        <ion-button expand="block" color="primary" (click)="generateReport()"
+          [disabled]="!canGenerate || (generating$ | async)">
+          <ion-icon name="bar-chart" slot="start"></ion-icon>
+          {{ (generating$ | async) ? 'Generando...' : 'Generar Reporte' }}
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" color="medium" (click)="saveConfiguration()">
+          <ion-icon name="save" slot="start"></ion-icon>
+          Guardar Configuración
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Report Preview -->
+  <ion-card *ngIf="currentReport$ | async as report">
+    <ion-card-header>
+      <ion-card-title>{{ report.name }}</ion-card-title>
+      <ion-card-subtitle>
+        Generado: {{ report.generatedAt | date:'short' }} | Tipo: {{ getReportTypeLabel(report.type) }}
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Summary -->
+      <div class="report-summary">
+        <h3>Resumen</h3>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" size-md="3" *ngFor="let item of report.summary | keyvalue">
+              <div class="stat-card">
+                <div class="stat-value">{{ item.value }}</div>
+                <div class="stat-label">{{ item.key }}</div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+
+      <!-- Availability Report Details -->
+      <div *ngIf="report.type === 'availability'" class="report-details">
+        <h3>Disponibilidad por Cliente</h3>
+        <ion-list>
+          <ion-item *ngFor="let customer of report.data.customers">
+            <ion-label>
+              <h2>{{ customer.customerName }}</h2>
+              <p>
+                Dispositivos: {{ customer.summary.totalDevices }} |
+                Uptime: {{ customer.summary.averageUptime.toFixed(2) }}% |
+                Incidentes: {{ customer.summary.incidents }} |
+                MTTR: {{ customer.summary.mttr.toFixed(0) }} min
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- Performance Report Details -->
+      <div *ngIf="report.type === 'performance'" class="report-details">
+        <h3>Top Dispositivos por CPU</h3>
+        <ion-list>
+          <ion-item *ngFor="let device of report.data.summary.topCpuDevices">
+            <ion-label>
+              <h2>{{ device.deviceName }}</h2>
+              <p>CPU: {{ device.value.toFixed(1) }}{{ device.unit }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <h3 class="ion-margin-top">Top Dispositivos por Memoria</h3>
+        <ion-list>
+          <ion-item *ngFor="let device of report.data.summary.topMemoryDevices">
+            <ion-label>
+              <h2>{{ device.deviceName }}</h2>
+              <p>Memoria: {{ device.value.toFixed(1) }}{{ device.unit }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- Alert Trends Report Details -->
+      <div *ngIf="report.type === 'alert-trends'" class="report-details">
+        <h3>Top Dispositivos por Alertas</h3>
+        <ion-list>
+          <ion-item *ngFor="let device of report.data.topDevices.slice(0, 10)">
+            <ion-label>
+              <h2>{{ device.displayName || device.deviceName }}</h2>
+              <p>
+                Total: {{ device.alertCount }} |
+                Críticas: {{ device.criticalCount }} |
+                Categorías: {{ device.categories.join(', ') }}
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- Export Actions -->
+      <div class="ion-margin-top">
+        <ion-button color="success" (click)="exportReport('csv')">
+          <ion-icon name="download" slot="start"></ion-icon>
+          Exportar CSV
+        </ion-button>
+        <ion-button color="secondary" (click)="exportReport('json')">
+          <ion-icon name="code" slot="start"></ion-icon>
+          Exportar JSON
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Saved Configurations -->
+  <ion-card *ngIf="savedConfigs.length > 0">
+    <ion-card-header>
+      <ion-card-title>Configuraciones Guardadas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let config of savedConfigs">
+          <ion-label>
+            <h2>{{ config.name }}</h2>
+            <p>Tipo: {{ getReportTypeLabel(config.type) }}</p>
+          </ion-label>
+          <ion-button slot="end" fill="clear" (click)="loadConfiguration(config)">
+            <ion-icon name="open" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button slot="end" fill="clear" color="danger" (click)="deleteConfiguration(config)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Report History -->
+  <ion-card *ngIf="reportHistory.length > 0">
+    <ion-card-header>
+      <ion-card-title>Historial de Reportes</ion-card-title>
+      <ion-button slot="end" fill="clear" color="danger" (click)="clearHistory()">
+        <ion-icon name="trash" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let report of reportHistory.slice(0, 10)">
+          <ion-label>
+            <h2>{{ report.name }}</h2>
+            <p>{{ report.generatedAt | date:'short' }} | {{ getReportTypeLabel(report.type) }}</p>
+          </ion-label>
+          <ion-button slot="end" fill="clear" (click)="loadHistoryReport(report)">
+            <ion-icon name="eye" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

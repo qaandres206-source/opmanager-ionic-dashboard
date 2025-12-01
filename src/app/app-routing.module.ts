@@ -18,6 +18,10 @@ const routes: Routes = [
     path: '**',
     redirectTo: '',
   },
+  {
+    path: 'reports',
+    loadChildren: () => import('./reports/reports.module').then( m => m.ReportsPageModule)
+  },
 ];
 @NgModule({
   imports: [
