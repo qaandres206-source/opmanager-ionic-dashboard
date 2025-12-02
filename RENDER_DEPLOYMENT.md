@@ -96,9 +96,65 @@ npm run server
 
 ## 🔐 Variables de Entorno
 
+**⚠️ IMPORTANTE**: Sí, **DEBES configurar variables de entorno** en Render para que tu aplicación funcione correctamente.
+
+### ¿Por qué son necesarias?
+
+Tu aplicación usa un servidor Express (en `server/index.js`) que actúa como proxy para las peticiones API. Este servidor necesita saber:
+- A qué URL del backend de OpManager debe redirigir las peticiones
+- En qué entorno está corriendo (producción vs desarrollo)
+- Qué versión de Node.js usar
+
 ### Variables Requeridas
 
-En Render Dashboard → Tu servicio → Environment:
+Estas variables **DEBEN** ser configuradas en Render:
+
+| Variable | Valor | Descripción |
+|----------|-------|-------------|
+| `NODE_VERSION` | `20.18.1` | Versión de Node.js (debe coincidir con `.nvmrc`) |
+| `API_BASE_URL` | `https://itview.intwo.cloud/api` | URL del backend de OpManager |
+| `NODE_ENV` | `production` | Entorno de ejecución |
+
+### Variables Opcionales
+
+Estas variables son opcionales (Render las maneja automáticamente):
+
+| Variable | Valor por defecto | Descripción |
+|----------|-------------------|-------------|
+| `PORT` | `10000` (asignado por Render) | Puerto donde corre el servidor |
+
+### 📝 Cómo Configurar en Render
+
+#### Paso 1: Acceder a Environment Variables
+
+1. Ve a [Render Dashboard](https://dashboard.render.com)
+2. Selecciona tu Web Service (`opmanager-ionic-dashboard`)
+3. En el menú lateral izquierdo, click en **"Environment"**
+
+#### Paso 2: Agregar Variables
+
+Para cada variable requerida:
+
+1. Click en **"Add Environment Variable"**
+2. En **Key**: ingresa el nombre de la variable (ej: `NODE_VERSION`)
+3. En **Value**: ingresa el valor (ej: `20.18.1`)
+4. Click en **"Add"** o presiona Enter
+
+#### Paso 3: Guardar Cambios
+
+1. Una vez agregadas todas las variables, click en **"Save Changes"**
+2. Render automáticamente **redeployará** tu aplicación con las nuevas variables
+
+#### Referencia Visual
+
+Así se ve la configuración de variables de entorno en Render:
+
+![Configuración de Variables de Entorno en Render](/Users/andresm/.gemini/antigravity/brain/529da86a-0584-43e6-b667-3b5c8be789f8/render_environment_variables_1764600153082.png)
+
+
+### ✅ Variables Configuradas Correctamente
+
+Deberías tener estas 3 variables:
 
 ```bash
 NODE_VERSION=20.18.1
@@ -106,19 +162,31 @@ API_BASE_URL=https://itview.intwo.cloud/api
 NODE_ENV=production
 ```
 
-### Variables Opcionales
+### 🔍 Verificar Configuración
 
-```bash
-PORT=3000  # Render asigna automáticamente
-```
+Después de configurar las variables:
 
-### Configurar en Render
+1. Ve a **Logs** en tu servicio
+2. Deberías ver algo como:
+   ```
+   🚀 Server running on port 10000
+   📡 API proxy: /api/* -> https://itview.intwo.cloud/api/*
+   📁 Serving static files from: /opt/render/project/src/www
+   ```
 
-1. Ve a tu Web Service
-2. Click en "Environment" en el menú lateral
-3. Click en "Add Environment Variable"
-4. Agrega cada variable
-5. Click en "Save Changes"
+### ⚠️ Errores Comunes
+
+**Error**: `API_BASE_URL is undefined`
+- **Causa**: No configuraste la variable `API_BASE_URL`
+- **Solución**: Agrega la variable en Environment
+
+**Error**: `Cannot find module`
+- **Causa**: `NODE_VERSION` incorrecta o no configurada
+- **Solución**: Verifica que `NODE_VERSION=20.18.1`
+
+**Error**: `502 Bad Gateway`
+- **Causa**: El servidor no puede conectarse al backend
+- **Solución**: Verifica que `API_BASE_URL` sea correcta
 
 ## 📊 Monitoreo
 
@@ -257,64 +325,3 @@ Value: [tu-servicio].onrender.com
 
 Render automáticamente provee SSL con Let's Encrypt.
 
-## 📚 Comparación con Firebase
-
-| Feature | Firebase Hosting | Render |
-|---------|-----------------|--------|
-| **Costo Free Tier** | 10 GB storage, 360 MB/día | 750 horas/mes |
-| **SSL** | ✅ Gratis | ✅ Gratis |
-| **Auto Deploy** | ✅ Con CLI | ✅ Con Git |
-| **Servidor Custom** | ❌ Solo Cloud Functions | ✅ Full Node.js |
-| **Variables de Entorno** | Via Functions Config | ✅ UI amigable |
-| **Cold Start** | ~1s (Functions) | ~30s (Free tier) |
-| **Logs** | Via CLI | ✅ UI en tiempo real |
-| **Rollback** | ✅ Via CLI | ✅ Via UI |
-
-## 🔗 URLs Útiles
-
-- **Dashboard**: https://dashboard.render.com
-- **Documentación**: https://render.com/docs
-- **Status**: https://status.render.com
-- **Comunidad**: https://community.render.com
-
-## 📝 Comandos Útiles
-
-```bash
-# Build local
-npm run build:prod
-
-# Servidor local
-npm run server
-
-# Servidor con auto-reload (desarrollo)
-npm run server:dev
-
-# Ver logs (requiere Render CLI)
-render logs -s opmanager-dashboard
-
-# SSH al servicio (requiere Render CLI y plan pagado)
-render ssh opmanager-dashboard
-```
-
-## ✅ Checklist de Deployment
-
-Antes de cada deployment:
-
-- [ ] Tests pasando localmente
-- [ ] Build exitoso: `npm run build:prod`
-- [ ] Servidor funciona localmente: `npm run server`
-- [ ] Variables de entorno configuradas en Render
-- [ ] Código pusheado a Git
-- [ ] Deployment iniciado en Render
-- [ ] Verificar logs durante deployment
-- [ ] Probar aplicación en URL de Render
-- [ ] Verificar que API proxy funciona
-- [ ] Probar en múltiples navegadores
-
-## 🎯 Próximos Pasos
-
-1. ✅ Deployment inicial completado
-2. Configurar dominio personalizado (opcional)
-3. Configurar alertas de uptime (ej: UptimeRobot)
-4. Implementar CI/CD con tests automáticos
-5. Considerar upgrade a plan pagado si necesitas 24/7 uptime
