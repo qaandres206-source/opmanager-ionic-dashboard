@@ -7,8 +7,8 @@
     "ng": "ng",
     "start": "ionic serve",
     "start:proxy": "ionic serve --proxy-config proxy.conf.json",
-    "build": "ng build",
-    "build:prod": "ng build --configuration production",
+    "build": "ionic build",
+    "build:prod": "ionic build --prod",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:e2e": "playwright test",
@@ -23,7 +23,7 @@
   },
   "private": true,
   "engines": {
-    "node": ">=24.0.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "dependencies": {
