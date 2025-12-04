@@ -25,6 +25,24 @@ module.exports = async function (context, req) {
 
     context.log(`[OpManager Proxy] ${req.method} ${fullUrl}`);
 
+    // Validar que haya API Key
+    const hasApiKey = req.headers.apikey || req.headers['apiKey'] || req.headers.authorization;
+    if (!hasApiKey) {
+        context.log.warn('[OpManager Proxy] No API Key provided');
+        context.res = {
+            status: 401,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({
+                error: 'Unauthorized',
+                message: 'API Key is required'
+            })
+        };
+        return;
+    }
+
     try {
         // Preparar headers
         const headers = {

@@ -1,11 +1,8 @@
 {
   "/api": {
-    "target": "https://itview.intwo.cloud/api",
+    "target": "https://itview.intwo.cloud",
     "secure": false,
     "changeOrigin": true,
-    "pathRewrite": {
-      "^/api": ""
-    },
     "logLevel": "debug"
   }
 }

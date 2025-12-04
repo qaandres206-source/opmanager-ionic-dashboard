@@ -13,14 +13,20 @@ export class TabsPage {
   connectionStatus$: Observable<ConnectionStatus> = this.dashboard.connectionStatus$;
   isDarkMode = false;
 
-  constructor(private dashboard: DashboardStateService) {}
+  constructor(private dashboard: DashboardStateService) { }
 
   ionViewWillEnter() {
-    this.dashboard.refreshAll().subscribe();
+    // Solo refrescar si hay API Key configurada
+    if (this.dashboard.apiKey$.getValue()) {
+      this.dashboard.refreshAll().subscribe();
+    }
   }
 
   onRefresh() {
-    this.dashboard.refreshAll().subscribe();
+    // Solo refrescar si hay API Key configurada
+    if (this.dashboard.apiKey$.getValue()) {
+      this.dashboard.refreshAll().subscribe();
+    }
   }
 
   toggleTheme() {
