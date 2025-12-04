@@ -12,7 +12,8 @@
                 "delete",
                 "patch",
                 "options"
-            ]
+            ],
+            "route": "api/{*path}"
         },
         {
             "type": "http",

@@ -18,7 +18,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class OpmanagerApiService {
   private readonly STORAGE_KEY = 'opmanagerApiKey';
-  private baseUrl = (environment as any).opmanagerApiUrl ?? 'https://itview.intwo.cloud/api';
+  private baseUrl = '/api'; // Always use proxy to avoid CORS issues
 
   constructor(private http: HttpClient) {
     // Log environment info for debugging
@@ -28,14 +28,10 @@ export class OpmanagerApiService {
       finalBaseUrl: this.baseUrl
     });
 
-    // During development, use the dev proxy at /api to avoid CORS issues when running ionic serve
-    try {
-      if (typeof window !== 'undefined' && window.location && window.location.hostname.includes('localhost')) {
-        this.baseUrl = '/api';
-        console.log('[OpManagerApiService] Localhost detected, switching to /api proxy');
-      }
-    } catch (e) {
-      // noop
+    // If a specific URL is configured in environment, use it (for custom deployments)
+    if ((environment as any).opmanagerApiUrl) {
+      this.baseUrl = (environment as any).opmanagerApiUrl;
+      console.log('[OpManagerApiService] Using configured URL:', this.baseUrl);
     }
   }
 
