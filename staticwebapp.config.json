@@ -11,6 +11,7 @@
     "routes": [
         {
             "route": "/api/*",
+            "rewrite": "https://itview.intwo.cloud/api/{*}",
             "allowedRoles": [
                 "anonymous"
             ]
