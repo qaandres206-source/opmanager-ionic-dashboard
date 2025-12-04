@@ -36,8 +36,12 @@ stages:
             displayName: 'Install dependencies'
 
           - script: |
-              npm run build:prod
-            displayName: 'Build production bundle'
+              npm install -g @ionic/cli @angular/cli
+            displayName: 'Install Ionic and Angular CLI'
+
+          - script: |
+              ionic build --prod
+            displayName: 'Build production bundle with Ionic'
 
           - task: PublishBuildArtifacts@1
             displayName: 'Publish build artifacts'
