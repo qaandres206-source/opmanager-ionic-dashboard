@@ -122,6 +122,7 @@ npx playwright install
 # Ejecutar todos los tests
 npm run test:e2e
 
+
 # Con UI interactiva (recomendado)
 npm run test:e2e:ui
 
