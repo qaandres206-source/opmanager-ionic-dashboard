@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  opmanagerApiUrl: '/api', // Proxied through Cloud Functions
+  opmanagerApiUrl: '/api/opmanager-proxy', // Proxied through Azure Functions
 };

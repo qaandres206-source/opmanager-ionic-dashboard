@@ -41,6 +41,18 @@ module.exports = async function (context, req) {
         if (req.headers.authorization) {
             headers['authorization'] = req.headers.authorization;
         }
+        // Pasar cookies para mantener sesión
+        if (req.headers.cookie) {
+            headers['cookie'] = req.headers.cookie;
+        }
+        // Pasar User-Agent
+        if (req.headers['user-agent']) {
+            headers['user-agent'] = req.headers['user-agent'];
+        }
+        // Pasar Accept
+        if (req.headers.accept) {
+            headers['accept'] = req.headers.accept;
+        }
 
         // Configurar opciones de fetch
         const options = {
