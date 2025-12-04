@@ -1,151 +1,161 @@
-# 🔑 Configurar Token en GitHub - Guía Simple
+# 🔑 CONFIGURACIÓN FINAL - Tokens de Azure en GitHub
 
-## ✅ ¡BUENAS NOTICIAS!
+## 🎯 SITUACIÓN ACTUAL
 
-Ya tienes GitHub Actions configurado y funcionando. Solo necesitas agregar el token que copiaste de Azure.
+Tienes **1 Static Web App** en Azure llamada `dashboard-msp`, pero tienes **2 workflows** en GitHub que intentan desplegar a diferentes apps.
 
 ---
 
-## 📍 PASOS SIMPLES (5 minutos)
+## ✅ SOLUCIÓN: Configura solo UNO de los workflows
 
-### Paso 1: Ve a tu repositorio en GitHub
-Abre tu navegador y ve a:
-```
-https://github.com/qaandres206-source/opmanager-ionic-dashboard
-```
+### Opción 1: Usar solo el workflow "green-wave" (RECOMENDADO)
 
-### Paso 2: Haz clic en "Settings"
-- Busca la pestaña **Settings** en la parte superior (al lado de "Insights")
-- Haz clic en ella
+1. **Obtén el token de tu Static Web App en Azure**:
+   - Ve a Azure Portal → Static Web Apps → `dashboard-msp`
+   - Haz clic en "Administrar token de implementación" (Manage deployment token)
+   - Copia el token completo
 
-### Paso 3: Ve a "Secrets and variables"
-- En el menú lateral izquierdo, busca **Secrets and variables**
-- Haz clic en **Actions**
+2. **Agrega el token en GitHub**:
+   - Ve a: https://github.com/qaandres206-source/opmanager-ionic-dashboard/settings/secrets/actions
+   - Haz clic en "New repository secret"
+   - **Name**: `AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_WAVE_016489610`
+   - **Secret**: Pega el token que copiaste
+   - Haz clic en "Add secret"
 
-### Paso 4: Agrega un nuevo secret
-- Haz clic en el botón verde **"New repository secret"**
+3. **Desactiva el otro workflow**:
+   - Renombra el archivo para que no se ejecute:
+   ```bash
+   mv .github/workflows/azure-static-web-apps-victorious-pebble-027a39d10.yml \
+      .github/workflows/azure-static-web-apps-victorious-pebble-027a39d10.yml.disabled
+   ```
 
-### Paso 5: Llena el formulario
+### Opción 2: Eliminar el workflow "victorious-pebble"
 
-**Name (Nombre del secret):**
-```
-AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_WAVE_016489610
-```
+Si no necesitas el segundo workflow, simplemente elimínalo:
 
-**Secret (El token que copiaste de Azure):**
-```
-d6c6b86093836ec1a6251d631de83c98947a8efecdfb298b2365cd801a680903-a4eb23...
-```
-(Pega el token completo que copiaste de Azure Portal)
-
-### Paso 6: Guarda
-- Haz clic en **"Add secret"**
-
-### Paso 7: Repite para el segundo token
-Repite los pasos 4-6 con este nombre:
-
-**Name:**
-```
-AZURE_STATIC_WEB_APPS_API_TOKEN_VICTORIOUS_PEBBLE_027A39D10
-```
-
-**Secret:**
-```
-(El mismo token de Azure o el token del segundo Static Web App si tienes dos)
+```bash
+rm .github/workflows/azure-static-web-apps-victorious-pebble-027a39d10.yml
 ```
 
 ---
 
-## 🎯 ¿Dónde está cada cosa?
+## 🔍 ¿Cómo saber cuál workflow usar?
 
-### Token de Azure (Ya lo tienes ✅)
-- Lo encontraste en: **Azure Portal** → **Static Web Apps** → **dashboard-msp** → **Administrar token de implementación**
-- Se ve así: `d6c6b86093836ec1a6251d631de83c98947a8efecdfb298b2365cd801a680903-a4eb23...`
+Verifica en Azure Portal cuál es el nombre de tu Static Web App:
 
-### Dónde poner el token (Aquí es donde debes ir ahora 👇)
-- **GitHub** → **Tu repositorio** → **Settings** → **Secrets and variables** → **Actions**
-- Ahí agregas el secret con el nombre y valor indicados arriba
+1. Ve a Azure Portal
+2. Busca "Static Web Apps"
+3. Verás tu app (probablemente `dashboard-msp`)
+4. El token de esa app es el que debes usar
 
----
-
-## 🚀 Después de agregar el token
-
-1. **El workflow se ejecutará automáticamente** cuando hagas push a `main`
-2. **Verifica el deployment**:
-   - Ve a la pestaña **Actions** en tu repositorio de GitHub
-   - Verás el workflow ejecutándose
-   - Espera a que termine (toma 2-5 minutos)
-
-3. **Verifica que funcionó**:
-   - Si ves un ✅ verde, ¡funcionó!
-   - Si ves un ❌ rojo, haz clic en el workflow para ver los logs
+**Si solo tienes UNA Static Web App**, solo necesitas UN workflow.
 
 ---
 
-## 🆘 Si tienes problemas
+## 📝 PASOS FINALES
 
-### Error: "Secret not found"
-**Solución**: Verifica que el nombre del secret sea exactamente:
+### 1. Decide qué workflow usar
+
+Mira en Azure Portal:
+- Si tu Static Web App se llama algo con "green-wave" → Usa el workflow `azure-static-web-apps-green-wave-016489610.yml`
+- Si se llama algo con "victorious-pebble" → Usa el workflow `azure-static-web-apps-victorious-pebble-027a39d10.yml`
+- Si se llama `dashboard-msp` → Usa cualquiera de los dos (recomiendo green-wave)
+
+### 2. Obtén el token
+
 ```
-AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_WAVE_016489610
+Azure Portal → Static Web Apps → [tu-app] → Administrar token de implementación
 ```
-(Debe ser EXACTAMENTE igual, con mayúsculas y guiones bajos)
+
+Copia el token completo (es largo, como 100+ caracteres).
+
+### 3. Agrega el token en GitHub
+
+Ve a: https://github.com/qaandres206-source/opmanager-ionic-dashboard/settings/secrets/actions
+
+Agrega el secret con el nombre que corresponda:
+- Para green-wave: `AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_WAVE_016489610`
+- Para victorious-pebble: `AZURE_STATIC_WEB_APPS_API_TOKEN_VICTORIOUS_PEBBLE_027A39D10`
+
+### 4. Elimina o desactiva el otro workflow
+
+Si solo tienes una Static Web App, elimina el workflow que no uses.
+
+---
+
+## 🚀 DESPUÉS DE CONFIGURAR EL TOKEN
+
+1. Haz push de los cambios:
+   ```bash
+   git push origin main
+   ```
+
+2. Ve a GitHub Actions:
+   ```
+   https://github.com/qaandres206-source/opmanager-ionic-dashboard/actions
+   ```
+
+3. Verás el workflow ejecutándose
+
+4. Espera a que termine (2-5 minutos)
+
+5. Si todo está bien, verás:
+   - ✅ Setup Node.js
+   - ✅ Install dependencies
+   - ✅ Install Ionic and Angular CLI
+   - ✅ Build with Ionic
+   - ✅ Build And Deploy
+
+---
+
+## ⚠️ ERRORES COMUNES
+
+### Error: "deployment_token was not provided"
+**Causa**: No agregaste el token en GitHub Secrets
+**Solución**: Sigue el paso 3 arriba
+
+### Error: "Failed to find a default file"
+**Causa**: La configuración de `app_location` estaba mal
+**Solución**: ✅ Ya lo arreglé en el último commit
 
 ### Error: "Invalid token"
-**Solución**: 
-1. Ve a Azure Portal
-2. Regenera el token en **Administrar token de implementación**
-3. Copia el nuevo token
-4. Actualiza el secret en GitHub
-
-### No veo la pestaña "Settings"
-**Solución**: Necesitas tener permisos de administrador en el repositorio. Si no los tienes, pídele al dueño del repositorio que agregue el secret.
+**Causa**: El token es incorrecto o expiró
+**Solución**: Regenera el token en Azure Portal y actualiza el secret en GitHub
 
 ---
 
-## 📊 Verificar que todo funciona
+## 🎯 RESUMEN ULTRA CORTO
 
-Después de agregar el token:
-
-1. Ve a **Actions** en GitHub
-2. Deberías ver un workflow ejecutándose
-3. Espera a que termine
-4. Si todo está bien, verás:
-   - ✅ Build and Deploy Job: Success
-   - Tu aplicación estará disponible en la URL de Azure Static Web Apps
+1. ✅ **Ya arreglé** la configuración de los workflows (app_location apunta a www)
+2. 👉 **TÚ necesitas**: Agregar el token en GitHub Secrets
+3. 🗑️ **Opcional**: Eliminar el workflow que no uses
+4. 🚀 **Después**: Hacer push y ver el deployment en Actions
 
 ---
 
-## 🎉 ¡Listo!
+## 📞 ¿Cuál workflow debo usar?
 
-Una vez que agregues el token, el deployment será automático cada vez que hagas push a `main`.
+**Respuesta simple**: Usa `azure-static-web-apps-green-wave-016489610.yml` y elimina el otro.
 
-**URL de tu aplicación** (después del deployment):
-- La encontrarás en Azure Portal → Static Web Apps → dashboard-msp → URL
+**¿Por qué?**: Porque probablemente solo tienes una Static Web App en Azure, no necesitas dos workflows.
 
 ---
 
-## 📝 Resumen Visual
+## 🔧 COMANDOS RÁPIDOS
 
-```
-Azure Portal (Ya hiciste esto ✅)
-    ↓
-Copiar token de implementación
-    ↓
-GitHub → Settings → Secrets → Actions (Haz esto ahora 👇)
-    ↓
-New repository secret
-    ↓
-Name: AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_WAVE_016489610
-Secret: [pega el token aquí]
-    ↓
-Add secret
-    ↓
-¡Listo! 🎉
+```bash
+# 1. Eliminar el workflow que no uses (opcional pero recomendado)
+rm .github/workflows/azure-static-web-apps-victorious-pebble-027a39d10.yml
+
+# 2. Hacer commit
+git add .
+git commit -m "chore: remove unused workflow"
+
+# 3. Hacer push (DESPUÉS de agregar el token en GitHub)
+git push origin main
 ```
 
 ---
 
 **Última actualización**: 2025-12-04
-**Tiempo estimado**: 5 minutos
-**Dificultad**: ⭐ Fácil
+**Estado**: ✅ Workflows corregidos, falta agregar token en GitHub
