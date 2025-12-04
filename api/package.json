@@ -2,7 +2,6 @@
     "name": "opmanager-api-proxy",
     "version": "1.0.0",
     "description": "Azure Functions API Proxy for OpManager Dashboard",
-    "main": "src/functions/*.js",
     "scripts": {
         "start": "func start",
         "test": "echo \"No tests yet\""
