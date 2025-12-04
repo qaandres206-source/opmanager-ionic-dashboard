@@ -2,13 +2,15 @@
     "name": "opmanager-api-proxy",
     "version": "1.0.0",
     "description": "Azure Functions API Proxy for OpManager Dashboard",
+    "engines": {
+        "node": ">=22.0.0"
+    },
     "scripts": {
         "start": "func start",
         "test": "echo \"No tests yet\""
     },
     "dependencies": {
-        "@azure/functions": "^4.5.0",
-        "node-fetch": "^3.3.2"
+        "@azure/functions": "^4.5.0"
     },
     "devDependencies": {
         "@types/node": "^20.x"

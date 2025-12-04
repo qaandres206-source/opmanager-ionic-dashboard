@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch'); // Native fetch is used in Node 18+
 
 /**
  * Azure Function para proxy de API de OpManager

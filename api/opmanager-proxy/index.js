@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch'); // Native fetch is used in Node 18+
 
 /**
  * Azure Function para proxy de API de OpManager
@@ -8,6 +8,20 @@ const fetch = require('node-fetch');
 const API_BASE_URL = 'https://itview.intwo.cloud/api';
 
 module.exports = async function (context, req) {
+    // Handle CORS preflight
+    if (req.method === 'OPTIONS') {
+        context.res = {
+            status: 204,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, apiKey, apikey, Authorization',
+                'Access-Control-Max-Age': '86400'
+            }
+        };
+        return;
+    }
+
     const path = req.params.path || '';
 
     // Construir URL completa
