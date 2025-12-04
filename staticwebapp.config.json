@@ -2,8 +2,10 @@
     "navigationFallback": {
         "rewrite": "/index.html",
         "exclude": [
-            "/images/*.{png,jpg,gif}",
-            "/css/*"
+            "/images/*.{png,jpg,gif,svg}",
+            "/css/*",
+            "/assets/*",
+            "/api/*"
         ]
     },
     "routes": [
@@ -20,9 +22,12 @@
             "statusCode": 200
         }
     },
+    "platform": {
+        "apiRuntime": "node:18"
+    },
     "globalHeaders": {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block"
     }
 }
