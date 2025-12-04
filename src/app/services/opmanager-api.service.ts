@@ -18,7 +18,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class OpmanagerApiService {
   private readonly STORAGE_KEY = 'opmanagerApiKey';
-  private baseUrl = '/api'; // Always use proxy to avoid CORS issues
+  private baseUrl = '/api/opmanager-proxy'; // Use Azure Function proxy
 
   constructor(private http: HttpClient) {
     // Log environment info for debugging
