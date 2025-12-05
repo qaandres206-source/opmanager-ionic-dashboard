@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  opmanagerApiUrl: 'https://itview.intwo.cloud/api',
+  opmanagerApiUrl: '/api',
 };
 
 /*

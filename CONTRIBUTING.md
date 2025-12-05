@@ -1,6 +1,6 @@
-# Contributing to OpManager MSP Dashboard
-
-¡Gracias por tu interés en contribuir al OpManager MSP Dashboard! Este documento proporciona guías y mejores prácticas para contribuir al proyecto.
+# Contributing to OpManager MSP Dashboard for Intwo
+ 
+¡Gracias por tu interés en contribuir al OpManager MSP Dashboard for Intwo! Este documento proporciona guías y mejores prácticas para contribuir al proyecto.
 
 ## 📋 Tabla de Contenidos
 
@@ -422,4 +422,4 @@ Si tienes preguntas sobre cómo contribuir:
 
 ## 🙏 Agradecimientos
 
-¡Gracias por contribuir al OpManager MSP Dashboard!
+¡Gracias por contribuir al OpManager MSP Dashboard for Intwo!
