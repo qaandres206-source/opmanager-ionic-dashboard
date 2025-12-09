@@ -159,28 +159,55 @@ El archivo `proxy.conf.json` redirige las llamadas `/api` a `https://itview.intw
 
 ## 📚 Documentación Adicional
 
+### Guías de Configuración y Desarrollo
 - [SETUP_GUIDE.md](./SETUP_GUIDE.md) - Guía detallada de configuración
 - [TESTING.md](./TESTING.md) - Guía de testing
-- [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) - Guía de deployment en Render
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Guía de contribución
+
+### Arquitectura y Deployment
+- [AZURE_ARCHITECTURE.md](./AZURE_ARCHITECTURE.md) - 📘 **Arquitectura completa en Azure**
+- [docs/ARCHITECTURE_DIAGRAMS.md](./docs/ARCHITECTURE_DIAGRAMS.md) - 📊 **Diagramas de arquitectura**
+- [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) - Guía de deployment en Render (alternativa)
+
+### Documentación Completa
+- [docs/README.md](./docs/README.md) - Índice completo de documentación
 
 ## 🏗️ Arquitectura
 
-### Frontend (Ionic/Angular)
+### Deployment Principal: Azure
+
+**Frontend (Azure Static Web Apps):**
 - **Ionic 8**: Framework UI con componentes móviles
-- **Angular 20**: Framework de aplicación
+- **Angular 19**: Framework de aplicación
 - **RxJS**: Programación reactiva
 - **CDK Virtual Scroll**: Renderizado eficiente de listas grandes
+- **CDN Global**: Distribución mundial de contenido
 
-### Backend (Express/Render)
-- **Express**: Servidor web y API proxy
-- **Render**: Plataforma de hosting y deployment
-- **Node.js 20**: Runtime del servidor
+**Backend (Azure Functions):**
+- **Node.js 22**: Runtime serverless
+- **API Proxy**: Manejo de CORS y autenticación
+- **Auto-scaling**: Escalabilidad automática
+
+**CI/CD (Azure DevOps):**
+- **Pipeline automático**: Build → Test → Deploy
+- **Triggers**: Push a main/develop
+- **Duración**: ~5-7 minutos
 
 ### API Integration
 - Integración con OpManager MSP REST API
 - Autenticación vía API Key en headers
 - Soporte para múltiples clientes y regiones
+
+### Diagramas de Arquitectura
+
+El proyecto incluye **5 diagramas profesionales** que documentan:
+1. Arquitectura general del sistema
+2. Flujo de datos completo
+3. Pipeline CI/CD
+4. Infraestructura detallada de Azure
+5. Resumen simplificado
+
+📊 **Ver todos los diagramas**: [docs/ARCHITECTURE_DIAGRAMS.md](./docs/ARCHITECTURE_DIAGRAMS.md)
 
 ## 🔍 Troubleshooting
 
