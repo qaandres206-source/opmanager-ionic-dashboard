@@ -1,7 +1,62 @@
+<ion-menu side="start" menuId="main-menu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item button (click)="navigate('/tabs/devices')" routerLinkActive="active-menu-item"
+        [routerLink]="['/tabs/devices']">
+        <ion-icon slot="start" name="server-outline"></ion-icon>
+        <ion-label>Dispositivos</ion-label>
+      </ion-item>
+
+      <ion-item button (click)="navigate('/tabs/alerts')" routerLinkActive="active-menu-item"
+        [routerLink]="['/tabs/alerts']">
+        <ion-icon slot="start" name="warning-outline"></ion-icon>
+        <ion-label>Alarmas</ion-label>
+      </ion-item>
+
+      <ion-item button (click)="navigate('/tabs/health')" routerLinkActive="active-menu-item"
+        [routerLink]="['/tabs/health']">
+        <ion-icon slot="start" name="pulse-outline"></ion-icon>
+        <ion-label>Resumen de Salud</ion-label>
+      </ion-item>
+
+      <ion-item button (click)="navigate('/tabs/interfaces')" routerLinkActive="active-menu-item"
+        [routerLink]="['/tabs/interfaces']">
+        <ion-icon slot="start" name="git-network-outline"></ion-icon>
+        <ion-label>Interfaces</ion-label>
+      </ion-item>
+
+      <ion-item button (click)="navigate('/tabs/reports')" routerLinkActive="active-menu-item"
+        [routerLink]="['/tabs/reports']">
+        <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
+        <ion-label>Reportes</ion-label>
+      </ion-item>
+
+      <ion-item button (click)="navigate('/tabs/sre-audit')" routerLinkActive="active-menu-item"
+        [routerLink]="['/tabs/sre-audit']">
+        <ion-icon slot="start" name="construct-outline"></ion-icon>
+        <ion-label>SRE Audit</ion-label>
+      </ion-item>
+
+      <ion-item-divider></ion-item-divider>
+
+      <ion-item button (click)="navigate('/tabs/settings')" routerLinkActive="active-menu-item"
+        [routerLink]="['/tabs/settings']">
+        <ion-icon slot="start" name="settings-outline"></ion-icon>
+        <ion-label>Configuración</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-icon name="grid-outline" slot="icon-only"></ion-icon>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
       OpManager MSP Dashboard
@@ -10,9 +65,12 @@
       <ion-button (click)="toggleTheme()">
         <ion-icon [name]="isDarkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
       </ion-button>
-      <ion-button color="primary" (click)="onRefresh()">
+      <ion-button (click)="onRefresh()" fill="solid" color="primary">
         <ion-icon name="refresh"></ion-icon>
-        <ion-label class="ion-padding-start">Actualizar</ion-label>
+        <ion-label class="ion-padding-start ion-hide-sm-down">Actualizar</ion-label>
+      </ion-button>
+      <ion-button routerLink="/tabs/settings">
+        <ion-icon name="settings-outline"></ion-icon>
       </ion-button>
       <ion-chip *ngIf="connectionStatus$ | async as status" [color]="status.color">
         <ion-icon name="ellipse" color="light"></ion-icon>
@@ -22,7 +80,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content id="main-content">
   <div class="stats-row" *ngIf="stats$ | async as stats">
     <ion-grid>
       <ion-row>
@@ -62,37 +120,5 @@
     </ion-grid>
   </div>
 
-  <ion-tabs>
-    <ion-tab-bar slot="top">
-      <ion-tab-button tab="devices" href="/tabs/devices">
-        <ion-icon aria-hidden="true" name="server-outline"></ion-icon>
-        <ion-label>Dispositivos</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="alerts" href="/tabs/alerts">
-        <ion-icon aria-hidden="true" name="warning-outline"></ion-icon>
-        <ion-label>Alarmas</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="health" href="/tabs/health">
-        <ion-icon aria-hidden="true" name="pulse-outline"></ion-icon>
-        <ion-label>Resumen de Salud</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="interfaces" href="/tabs/interfaces">
-        <ion-icon name="git-network-outline"></ion-icon>
-        <ion-label>Interfaces</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="reports" href="/tabs/reports">
-        <ion-icon name="bar-chart-outline"></ion-icon>
-        <ion-label>Reportes</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="sre-audit" href="/tabs/sre-audit">
-        <ion-icon name="construct-outline"></ion-icon>
-        <ion-label>SRE Audit</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+  <ion-router-outlet></ion-router-outlet>
 </ion-content>

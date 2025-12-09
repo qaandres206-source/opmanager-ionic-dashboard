@@ -17,9 +17,11 @@
         <ion-label position="stacked">API Key</ion-label>
         <ion-input [(ngModel)]="apiKey" type="password"></ion-input>
       </ion-item>
-      <ion-button expand="block" color="primary" class="ion-margin-top" (click)="onSaveApiKey()">
-        <ion-icon name="save" slot="start"></ion-icon>
-        Guardar API Key
+      <ion-button expand="block" color="primary" class="ion-margin-top" (click)="onSaveApiKey()" [disabled]="saving">
+        <ion-spinner name="crescent" *ngIf="saving" slot="start"></ion-spinner>
+        <ion-icon name="save" slot="start" *ngIf="!saving"></ion-icon>
+        <span *ngIf="!saving">Guardar API Key</span>
+        <span *ngIf="saving">Guardando...</span>
       </ion-button>
     </ion-card-content>
   </ion-card>
@@ -29,9 +31,11 @@
       <ion-card-title>Estado de Conexión</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-button expand="block" (click)="onTestConnection()">
-        <ion-icon name="cloud-outline" slot="start"></ion-icon>
-        Probar Conexión
+      <ion-button expand="block" (click)="onTestConnection()" [disabled]="testing">
+        <ion-spinner name="crescent" *ngIf="testing" slot="start"></ion-spinner>
+        <ion-icon name="cloud-outline" slot="start" *ngIf="!testing"></ion-icon>
+        <span *ngIf="!testing">Probar Conexión</span>
+        <span *ngIf="testing">Probando...</span>
       </ion-button>
     </ion-card-content>
   </ion-card>

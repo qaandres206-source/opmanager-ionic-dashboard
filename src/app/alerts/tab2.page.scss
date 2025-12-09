@@ -22,6 +22,14 @@
 
 .data-row {
   border-bottom: 1px solid var(--ion-color-light-shade);
+  transition: background-color 0.2s ease;
+
+  &.expanded {
+    .text-cell {
+      white-space: normal;
+      word-wrap: break-word;
+    }
+  }
 }
 
 .data-row:nth-child(even) {
@@ -32,6 +40,38 @@
   display: flex;
   align-items: center;
   padding: 10px;
+}
+
+.text-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.truncated {
+    max-width: 100%;
+  }
+
+  &:hover {
+    color: var(--ion-color-primary);
+  }
+}
+
+.expand-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px !important;
+}
+
+.expand-btn {
+  --padding-start: 4px;
+  --padding-end: 4px;
+  margin: 0;
+  height: 28px;
+  width: 28px;
 }
 
 .text-truncate {

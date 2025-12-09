@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { DashboardStateService } from '../services/dashboard-state.service';
 import { OpmanagerApiService } from '../services/opmanager-api.service';
 import { OpManagerDevice } from '../core/models';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-devices',
@@ -25,7 +26,10 @@ export class Tab1Page {
   typeInputValue: string = '';
   statusInputValue: string = '';
 
-  constructor(public dashboard: DashboardStateService, private api: OpmanagerApiService) {
+  // Expanded rows for text truncation
+  expandedRows: Set<number> = new Set();
+
+  constructor(public dashboard: DashboardStateService, private api: OpmanagerApiService, private menuCtrl: MenuController) {
     this.dashboard.devices$.subscribe((devices) => {
       this.devices = devices;
       this.applyFilters();
@@ -143,6 +147,15 @@ export class Tab1Page {
     URL.revokeObjectURL(url);
   }
 
+  getStatusColor(status: string): string {
+    const statusLower = (status || '').toLowerCase();
+    if (statusLower.includes('critical')) return 'danger';
+    if (statusLower.includes('warning')) return 'warning';
+    if (statusLower.includes('attention')) return 'medium';
+    if (statusLower.includes('clear')) return 'success';
+    return 'medium';
+  }
+
   // Pagination helpers
   get totalDevicePages() {
     return Math.max(1, Math.ceil(this.filteredDevices.length / this.pageSize));
@@ -159,5 +172,33 @@ export class Tab1Page {
 
   prevDevicePage() {
     if (this.currentPage > 1) this.currentPage--;
+  }
+
+  async openFiltersMenu() {
+    await this.menuCtrl.open('devices-filters-menu');
+  }
+
+  async closeFiltersMenu() {
+    await this.menuCtrl.close('devices-filters-menu');
+  }
+
+  // Text truncation helpers
+  isExpanded(index: number): boolean {
+    return this.expandedRows.has(index);
+  }
+
+  toggleExpand(index: number) {
+    if (this.expandedRows.has(index)) {
+      this.expandedRows.delete(index);
+    } else {
+      this.expandedRows.add(index);
+    }
+  }
+
+  hasLongContent(device: OpManagerDevice): boolean {
+    const name = (device.displayName || device.deviceName || device.name || '').toString();
+    const ip = (device.ipaddress || device.ip || '').toString();
+    const time = (device.prettyTime || device.addedTime || '').toString();
+    return name.length > 25 || ip.length > 15 || time.length > 20;
   }
 }

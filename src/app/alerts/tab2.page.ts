@@ -3,6 +3,7 @@ import { DashboardStateService } from '../services/dashboard-state.service';
 import { OpmanagerApiService } from '../services/opmanager-api.service';
 import { OpManagerAlert } from '../core/models';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-alerts',
@@ -42,8 +43,11 @@ export class Tab2Page implements OnDestroy {
   private subs: Subscription[] = [];
   // UI state for errors (e.g., CORS)
   errorMessage: string | null = null;
+  
+  // Expanded rows for text truncation
+  expandedRows: Set<number> = new Set();
 
-  constructor(public dashboard: DashboardStateService, private api: OpmanagerApiService) {
+  constructor(public dashboard: DashboardStateService, private api: OpmanagerApiService, private menuCtrl: MenuController) {
     // Reload alarms whenever selected customer changes.
     // We now fetch ALL alarms for the customer and filter client-side.
     const s1 = this.dashboard.selectedCustomer$
@@ -83,6 +87,33 @@ export class Tab2Page implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.forEach((s) => s.unsubscribe());
+  }
+
+  async openFiltersMenu() {
+    await this.menuCtrl.open('alerts-filters-menu');
+  }
+
+  async closeFiltersMenu() {
+    await this.menuCtrl.close('alerts-filters-menu');
+  }
+
+  // Text truncation helpers
+  isExpanded(index: number): boolean {
+    return this.expandedRows.has(index);
+  }
+
+  toggleExpand(index: number) {
+    if (this.expandedRows.has(index)) {
+      this.expandedRows.delete(index);
+    } else {
+      this.expandedRows.add(index);
+    }
+  }
+
+  hasLongContent(alert: OpManagerAlert): boolean {
+    const name = (alert.displayName || alert.deviceName || '').toString();
+    const message = (alert.message || '').toString();
+    return name.length > 20 || message.length > 40;
   }
 
   /** Total pages for current filtered results */

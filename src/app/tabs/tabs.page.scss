@@ -1,1 +1,103 @@
+.stats-row {
+  padding: 16px;
+  background: var(--ion-background-color);
+}
 
+.stat-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  ion-card-content {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &.blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+
+  &.orange {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+  }
+
+  &.green {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+  }
+
+  &.red {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+  }
+}
+
+.active-menu-item {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+  font-weight: 600;
+  border-left: 4px solid var(--ion-color-secondary);
+}
+
+ion-menu {
+  ion-content {
+    --background: var(--ion-background-color);
+  }
+
+  ion-item {
+    --border-radius: 8px;
+    margin: 4px 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      --background: var(--ion-color-light);
+    }
+  }
+
+  ion-item-divider {
+    margin: 12px 0;
+  }
+}
+
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+}
+
+ion-button[color="primary"] {
+  --color: var(--ion-color-primary-contrast);
+  --background: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+ion-chip {
+  font-weight: 600;
+  border-radius: 20px;
+}
+
+// Ocultar label en pantallas pequeñas
+@media (max-width: 768px) {
+  .ion-hide-sm-down {
+    display: none !important;
+  }
+}

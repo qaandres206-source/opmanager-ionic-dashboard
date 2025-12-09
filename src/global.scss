@@ -32,6 +32,64 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* Usamos dark.class.css para controlar el modo oscuro manualmente */
+@import "@ionic/angular/css/palettes/dark.class.css";
+
+/**
+ * Custom Global Styles
+ * -----------------------------------------------------
+ */
+
+// Mejorar inputs y selects con bordes redondeados
+ion-input,
+ion-select,
+ion-textarea {
+    --border-radius: 12px !important;
+}
+
+ion-item {
+    --border-radius: 12px;
+    --transition: all 0.2s ease;
+}
+
+ion-button {
+    --border-radius: 12px;
+    text-transform: none;
+    font-weight: 600;
+}
+
+ion-card {
+    --border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+ion-badge {
+    --border-radius: 12px;
+    font-weight: 600;
+}
+
+// Smooth scrolling
+* {
+    scroll-behavior: smooth;
+}
+
+// Mejorar la apariencia de los scrollbars
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--ion-color-light);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--ion-color-medium);
+    border-radius: 10px;
+
+    &:hover {
+        background: var(--ion-color-medium-shade);
+    }
+}

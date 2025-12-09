@@ -23,10 +23,7 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: () => import('../settings/settings.module').then(m => m.SettingsPageModule)
       },
-      {
-        path: 'tab3',
-        loadChildren: () => import('../health/tab3.module').then(m => m.Tab3PageModule)
-      },
+
       {
         path: 'interfaces',
         loadChildren: () => import('../interfaces/interfaces.module').then(m => m.InterfacesPageModule)
