@@ -14,7 +14,12 @@ import { MenuController } from '@ionic/angular';
 export class TabsPage implements OnInit {
   stats$: Observable<StatsSummary | null> = this.dashboard.stats$;
   connectionStatus$: Observable<ConnectionStatus> = this.dashboard.connectionStatus$;
+  customers$ = this.dashboard.customers$;
+  selectedCustomer$ = this.dashboard.selectedCustomer$;
+  lastUpdated$ = this.dashboard.lastUpdated$;
+  loading$ = this.dashboard.loading$;
   isDarkMode = false;
+  showStats = true;
 
   constructor(
     private dashboard: DashboardStateService,
@@ -59,6 +64,34 @@ export class TabsPage implements OnInit {
     this.isDarkMode = !this.isDarkMode;
     localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.applyTheme();
+  }
+
+  toggleStats() {
+    this.showStats = !this.showStats;
+  }
+
+  onCustomerFilterChange(event: any) {
+    const customerId = event.detail.value;
+    this.dashboard.selectedCustomer$.next(customerId);
+    // Refrescar datos con el nuevo filtro
+    if (this.dashboard.apiKey$.getValue()) {
+      this.dashboard.refreshAll().subscribe();
+    }
+  }
+
+  clearAllFilters() {
+    // Resetear el filtro de cliente a "Todos"
+    this.dashboard.selectedCustomer$.next('-1');
+
+    // Limpiar los datos actuales para forzar una búsqueda desde cero
+    this.dashboard.devices$.next([]);
+    this.dashboard.alerts$.next([]);
+    this.dashboard.stats$.next(null);
+
+    // Refrescar con todos los clientes
+    if (this.dashboard.apiKey$.getValue()) {
+      this.dashboard.refreshAll().subscribe();
+    }
   }
 
   private applyTheme() {

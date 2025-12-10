@@ -61,18 +61,38 @@
     <ion-title>
       OpManager MSP Dashboard
     </ion-title>
+
+    <!-- Filtro de Cliente - Slot separado para mejor control -->
+    <div slot="end" class="header-controls">
+      <ion-select class="client-filter-select" [value]="selectedCustomer$ | async"
+        (ionChange)="onCustomerFilterChange($event)" interface="popover" placeholder="Cliente">
+        <ion-select-option value="-1">Todos los clientes</ion-select-option>
+        <ion-select-option *ngFor="let customer of customers$ | async" [value]="customer.CustomerID">
+          {{ customer.CustomerName }}
+        </ion-select-option>
+      </ion-select>
+    </div>
+
     <ion-buttons slot="end">
-      <ion-button (click)="toggleTheme()">
+      <!-- Botón Limpiar Filtros -->
+      <ion-button (click)="clearAllFilters()" fill="clear" title="Limpiar todos los filtros" class="clean-btn">
+        <img src="assets/clean_icon.png" alt="Limpiar" class="clean-icon" />
+      </ion-button>
+
+      <ion-button (click)="toggleTheme()" fill="clear">
         <ion-icon [name]="isDarkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
       </ion-button>
-      <ion-button (click)="onRefresh()" fill="solid" color="primary">
+
+      <ion-button (click)="onRefresh()" fill="clear">
         <ion-icon name="refresh"></ion-icon>
         <ion-label class="ion-padding-start ion-hide-sm-down">Actualizar</ion-label>
       </ion-button>
-      <ion-button routerLink="/tabs/settings">
+
+      <ion-button routerLink="/tabs/settings" fill="clear">
         <ion-icon name="settings-outline"></ion-icon>
       </ion-button>
-      <ion-chip *ngIf="connectionStatus$ | async as status" [color]="status.color">
+
+      <ion-chip *ngIf="connectionStatus$ | async as status" [color]="status.color" class="status-chip">
         <ion-icon name="ellipse" color="light"></ion-icon>
         <ion-label>{{ status.text }}</ion-label>
       </ion-chip>
@@ -80,11 +100,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="main-content">
-  <div class="stats-row" *ngIf="stats$ | async as stats">
-    <ion-grid>
+<!-- Stats Row - Siempre visible - Ahora colapsable -->
+<div class="stats-container" [class.collapsed]="!showStats">
+  <div class="stats-row">
+    <ion-grid *ngIf="stats$ | async as stats">
       <ion-row>
-        <ion-col size="12" size-md="3" *ngIf="stats">
+        <ion-col size="12" size-md="3">
           <ion-card class="stat-card blue">
             <ion-card-content>
               <div class="stat-value">{{ stats.totalDevices }}</div>
@@ -119,6 +140,22 @@
       </ion-row>
     </ion-grid>
   </div>
+</div>
 
+<div class="stats-toggler-container">
+  <div class="stats-toggler" (click)="toggleStats()">
+    <ion-icon [name]="showStats ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+  </div>
+</div>
+
+<!-- Spinner de Carga Global -->
+<div class="global-loading-overlay" *ngIf="loading$ | async">
+  <div class="loading-content">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando datos...</p>
+  </div>
+</div>
+
+<ion-content id="main-content">
   <ion-router-outlet></ion-router-outlet>
 </ion-content>
