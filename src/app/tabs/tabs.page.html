@@ -66,7 +66,7 @@
     <div slot="end" class="header-controls">
       <ion-select class="client-filter-select" [value]="selectedCustomer$ | async"
         (ionChange)="onCustomerFilterChange($event)" interface="popover" placeholder="Cliente">
-        <ion-select-option value="-1">Todos los clientes</ion-select-option>
+        <ion-select-option value="-1">Todos</ion-select-option>
         <ion-select-option *ngFor="let customer of customers$ | async" [value]="customer.CustomerID">
           {{ customer.CustomerName }}
         </ion-select-option>

@@ -31,8 +31,8 @@
         </ion-input>
       </ion-item>
       <ion-item>
-        <ion-select [value]="selectedType" (ionChange)="onTypeChange($event)" [disabled]="loading"
-          interface="popover" placeholder="Seleccionar tipo">
+        <ion-select [value]="selectedType" (ionChange)="onTypeChange($event)" [disabled]="loading" interface="popover"
+          placeholder="Seleccionar tipo">
           <ion-select-option value="all">Todos</ion-select-option>
           <ion-select-option value="Switch">Switch</ion-select-option>
           <ion-select-option value="Router">Router</ion-select-option>
@@ -44,8 +44,8 @@
       <!-- Filtro Estado -->
       <ion-item>
         <ion-label position="stacked">Estado</ion-label>
-        <ion-input [value]="statusInputValue" (ionInput)="onStatusInputChange($event)"
-          placeholder="Escribir o pegar..." [disabled]="loading">
+        <ion-input [value]="statusInputValue" (ionInput)="onStatusInputChange($event)" placeholder="Escribir o pegar..."
+          [disabled]="loading">
         </ion-input>
       </ion-item>
       <ion-item>
@@ -72,7 +72,7 @@
 
 <ion-header>
   <ion-toolbar>
-    <ion-title size="large">Lista de Dispositivos</ion-title>
+    <ion-title size="large">Dispositivos</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="openFiltersMenu()" fill="clear">
         <ion-icon name="funnel-outline" slot="icon-only"></ion-icon>
@@ -96,17 +96,18 @@
           <div class="table-responsive">
             <ion-grid class="devices-table">
               <ion-row class="header-row">
-                <ion-col>Nombre</ion-col>
+                <ion-col size="2">Nombre</ion-col>
                 <ion-col size="2">IP</ion-col>
                 <ion-col size="2">Estado</ion-col>
                 <ion-col size="2">Salud</ion-col>
-                <ion-col size="2">Tipo</ion-col>
-                <ion-col size="3">Última Actualización</ion-col>
+                <ion-col size="1">Tipo</ion-col>
+                <ion-col size="2">Última Actualización</ion-col>
                 <ion-col size="1"></ion-col>
               </ion-row>
               <ion-row *ngFor="let d of pagedDevices; let i = index" class="data-row" [class.expanded]="isExpanded(i)">
-                <ion-col>
-                  <div class="text-cell" [class.truncated]="!isExpanded(i)">
+                <ion-col size="2">
+                  <div class="text-cell" [class.truncated]="!isExpanded(i)"
+                    [title]="d.displayName || d.deviceName || d.name">
                     {{ d.displayName || d.deviceName || d.name }}
                   </div>
                 </ion-col>
@@ -123,18 +124,19 @@
                     {{ d.statusStr || 'N/A' }}
                   </div>
                 </ion-col>
-                <ion-col size="2">
+                <ion-col size="1">
                   <div class="text-cell" [class.truncated]="!isExpanded(i)">
                     {{ d.category || d.type }}
                   </div>
                 </ion-col>
-                <ion-col size="3">
+                <ion-col size="2">
                   <div class="text-cell" [class.truncated]="!isExpanded(i)">
                     {{ d.prettyTime || d.addedTime }}
                   </div>
                 </ion-col>
                 <ion-col size="1" class="expand-col">
-                  <ion-button *ngIf="hasLongContent(d)" fill="clear" size="small" (click)="toggleExpand(i)" class="expand-btn">
+                  <ion-button *ngIf="hasLongContent(d)" fill="clear" size="small" (click)="toggleExpand(i)"
+                    class="expand-btn">
                     <ion-icon [name]="isExpanded(i) ? 'chevron-up' : 'chevron-down'"></ion-icon>
                   </ion-button>
                 </ion-col>

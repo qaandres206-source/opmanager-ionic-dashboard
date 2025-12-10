@@ -17,7 +17,7 @@
       <ion-button expand="block" color="primary" class="ion-margin-top" (click)="onSaveApiKey()" [disabled]="saving">
         <ion-spinner name="crescent" *ngIf="saving" slot="start"></ion-spinner>
         <ion-icon name="save" slot="start" *ngIf="!saving"></ion-icon>
-        <span *ngIf="!saving">Guardar API Key</span>
+        <span *ngIf="!saving">Guardar Key</span>
         <span *ngIf="saving">Guardando...</span>
       </ion-button>
     </ion-card-content>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, of, switchMap, tap, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, switchMap, tap, Observable, finalize } from 'rxjs';
 import { DashboardData, HealthSummary, OpManagerAlert, OpManagerDevice } from '../core/models';
 import { OpmanagerApiService } from './opmanager-api.service';
 
@@ -57,8 +57,8 @@ export class DashboardStateService {
         } else {
           this.connectionStatus$.next({ text: 'Desconectado', color: 'danger' });
         }
-        this.loading$.next(false);
-      })
+      }),
+      finalize(() => this.loading$.next(false))
     );
   }
 
@@ -94,8 +94,8 @@ export class DashboardStateService {
         this.stats$.next(stats);
 
         this.lastUpdated$.next(new Date());
-        this.loading$.next(false);
-      })
+      }),
+      finalize(() => this.loading$.next(false))
     );
   }
 
