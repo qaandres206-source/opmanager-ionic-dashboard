@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Logger } from '../core/utils/logger';
 import {
   OpManagerDevice,
   OpManagerAlert,
@@ -21,8 +22,8 @@ export class OpmanagerApiService {
   private baseUrl = '/api/opmanager-proxy'; // Use Azure Function proxy
 
   constructor(private http: HttpClient) {
-    // Log environment info for debugging
-    console.log('[OpManagerApiService] Initializing...', {
+    // Log environment info for debugging (only in development)
+    Logger.debug('[OpManagerApiService] Initializing...', {
       production: environment.production,
       configuredUrl: (environment as any).opmanagerApiUrl,
       finalBaseUrl: this.baseUrl
@@ -31,7 +32,7 @@ export class OpmanagerApiService {
     // If a specific URL is configured in environment, use it (for custom deployments)
     if ((environment as any).opmanagerApiUrl) {
       this.baseUrl = (environment as any).opmanagerApiUrl;
-      console.log('[OpManagerApiService] Using configured URL:', this.baseUrl);
+      Logger.debug('[OpManagerApiService] Using configured URL:', this.baseUrl);
     }
   }
 
@@ -477,18 +478,24 @@ export class OpmanagerApiService {
   }
 
   private debugLogRequest(method: string, url: string, params?: HttpParams, headers?: HttpHeaders) {
-    try {
-      const paramsStr = params?.toString() ?? '';
-      const headerObj: Record<string, string | string[]> = {};
-      headers?.keys().forEach((k) => {
-        const vals = headers.getAll(k) ?? [];
-        headerObj[k] = vals.length > 1 ? vals : vals[0] ?? '';
-      });
-      // eslint-disable-next-line no-console
-      console.debug('[OpManager API] Request', { method, url, params: paramsStr, headers: headerObj });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.debug('[OpManager API] DebugLog failed', e);
+    // Only log in development mode
+    if (!environment.production) {
+      try {
+        const paramsStr = params?.toString() ?? '';
+        const headerObj: Record<string, string | string[]> = {};
+        headers?.keys().forEach((k) => {
+          const vals = headers.getAll(k) ?? [];
+          // Sanitize sensitive headers
+          if (k.toLowerCase() === 'apikey') {
+            headerObj[k] = '***REDACTED***';
+          } else {
+            headerObj[k] = vals.length > 1 ? vals : vals[0] ?? '';
+          }
+        });
+        Logger.apiRequest(method, url, paramsStr, headerObj);
+      } catch (e) {
+        Logger.debug('[OpManager API] DebugLog failed', e);
+      }
     }
   }
 }

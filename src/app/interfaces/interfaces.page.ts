@@ -9,6 +9,7 @@ import { OpmanagerApiService } from '../services/opmanager-api.service';
 import { OpManagerInterface } from '../core/models';
 import { DashboardStateService } from '../services/dashboard-state.service';
 import { InterfaceDetailModalComponent } from './interface-detail-modal/interface-detail-modal.component';
+import { Logger } from '../core/utils/logger';
 
 interface SortConfig {
   sortByColumn: string;
@@ -78,7 +79,7 @@ export class InterfacesPage implements OnInit {
         // No filter params sent to backend!
         return this.opmanagerApi.listInterfaces(params).pipe(
           catchError(err => {
-            console.error('Error fetching interfaces:', err);
+            Logger.error('Error fetching interfaces:', err);
             this.errorMessage = 'Error al cargar las interfaces. Verifique la conexión y la API Key.';
             return of([]);
           })

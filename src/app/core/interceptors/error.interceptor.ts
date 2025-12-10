@@ -1,5 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
+import { Logger } from '../utils/logger';
 
 /**
  * HTTP Interceptor para manejo centralizado de errores
@@ -7,7 +8,7 @@ import { catchError, throwError } from 'rxjs';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req).pipe(
         catchError((error) => {
-            console.error('HTTP Error:', error);
+            Logger.error('HTTP Error:', error);
 
             let errorMessage = 'An error occurred';
 

@@ -68,3 +68,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+SECURITY_IMPROVEMENTS.md
+PROXY_ANALYSIS.md
+DEPLOYMENT_GUIDE.md
+SECURITY_GUIDE.md

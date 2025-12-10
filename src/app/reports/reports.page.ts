@@ -9,6 +9,7 @@ import {
   DateRange,
 } from '../core/models';
 import { BehaviorSubject } from 'rxjs';
+import { Logger } from '../core/utils/logger';
 
 @Component({
   selector: 'app-reports',
@@ -100,7 +101,7 @@ export class ReportsPage implements OnInit {
         this.generating$.next(false);
       },
       error: (err) => {
-        console.error('Error generating report:', err);
+        Logger.error('Error generating report:', err);
         this.generating$.next(false);
       },
     });

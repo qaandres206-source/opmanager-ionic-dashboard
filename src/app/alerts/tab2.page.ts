@@ -4,6 +4,7 @@ import { OpmanagerApiService } from '../services/opmanager-api.service';
 import { OpManagerAlert } from '../core/models';
 import { BehaviorSubject, Subscription, switchMap } from 'rxjs';
 import { MenuController } from '@ionic/angular';
+import { Logger } from '../core/utils/logger';
 
 @Component({
   selector: 'app-alerts',
@@ -43,7 +44,7 @@ export class Tab2Page implements OnDestroy {
   private subs: Subscription[] = [];
   // UI state for errors (e.g., CORS)
   errorMessage: string | null = null;
-  
+
   // Expanded rows for text truncation
   expandedRows: Set<number> = new Set();
 
@@ -74,7 +75,7 @@ export class Tab2Page implements OnDestroy {
           this.localLoading$.next(false);
         },
         error: (err) => {
-          console.error('Error loading alarms page', err);
+          Logger.error('Error loading alarms page', err);
           this.errorMessage = this.detectCorsError(err)
             ? 'Error CORS: el servidor no permite solicitudes desde este origen. Usa un proxy en `ionic serve` o habilita CORS en el servidor.'
             : 'Error cargando alarmas';

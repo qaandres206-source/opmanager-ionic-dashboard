@@ -3,6 +3,7 @@ import { Observable, map } from 'rxjs';
 import { DashboardStateService } from '../services/dashboard-state.service';
 import { OpmanagerApiService } from '../services/opmanager-api.service';
 import { HealthSummary, OpManagerDevice } from '../core/models';
+import { Logger } from '../core/utils/logger';
 
 @Component({
   selector: 'app-health',
@@ -31,13 +32,10 @@ export class Tab3Page {
     }
     this.api.postPingResponse(name).subscribe({
       next: (res) => {
-        // Por ahora solo registramos en consola; se puede cambiar a un toast más adelante.
-        // eslint-disable-next-line no-console
-        console.log('Ping response for', name, res);
+        Logger.debug('Ping response for', name, res);
       },
       error: (err) => {
-        // eslint-disable-next-line no-console
-        console.error('Ping error for', name, err);
+        Logger.error('Ping error for', name, err);
       },
     });
   }
@@ -49,12 +47,10 @@ export class Tab3Page {
     }
     this.api.postTraceResponse(name).subscribe({
       next: (res) => {
-        // eslint-disable-next-line no-console
-        console.log('Trace response for', name, res);
+        Logger.debug('Trace response for', name, res);
       },
       error: (err) => {
-        // eslint-disable-next-line no-console
-        console.error('Trace error for', name, err);
+        Logger.error('Trace error for', name, err);
       },
     });
   }

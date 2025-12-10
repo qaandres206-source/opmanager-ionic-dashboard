@@ -1,33 +1,35 @@
 {
-    "navigationFallback": {
-        "rewrite": "/index.html",
-        "exclude": [
-            "/images/*.{png,jpg,gif,svg}",
-            "/css/*",
-            "/assets/*",
-            "/api/*"
-        ]
-    },
     "routes": [
         {
             "route": "/api/*",
             "allowedRoles": [
-                "anonymous"
+                "authenticated"
             ]
         }
     ],
+    "navigationFallback": {
+        "rewrite": "/index.html",
+        "exclude": [
+            "/api/*",
+            "/*.{css,scss,js,png,gif,ico,jpg,svg,webp}"
+        ]
+    },
+    "globalHeaders": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
+    },
+    "mimeTypes": {
+        ".json": "application/json",
+        ".js": "text/javascript",
+        ".css": "text/css"
+    },
     "responseOverrides": {
         "404": {
             "rewrite": "/index.html",
             "statusCode": 200
         }
-    },
-    "platform": {
-        "apiRuntime": "node:22"
-    },
-    "globalHeaders": {
-        "X-Content-Type-Options": "nosniff",
-        "X-Frame-Options": "DENY",
-        "X-XSS-Protection": "1; mode=block"
     }
 }
